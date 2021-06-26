@@ -1,0 +1,14 @@
+{
+  "name": "project-planning-rest-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Olena_Tsemko <elena.hlihan@gmail.com>",
+  "license": "ISC"
+}
