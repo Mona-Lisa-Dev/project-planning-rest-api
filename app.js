@@ -7,6 +7,7 @@ const limiter = require('./helpers/limiter');
 require('dotenv').config();
 
 const { HttpCode, Limit } = require('./helpers/constants');
+const projectsRouter = require('./routes/api/projects');
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use(logger(formatsLogger));
 app.use(cors());
 app.use(express.json({ limit: Limit.MAX_JSON }));
 app.use(boolParser());
+app.use('/api/projects', projectsRouter);
 
 app.use((_req, res) => {
   res.status(HttpCode.NOT_FOUND).json({
