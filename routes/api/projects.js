@@ -12,6 +12,6 @@ router.post('/', ctrl.createProject);
 
 // router.delete('/:projectId', ctrl.deleteProject);
 
-// router.patch('/:projectId/title', ctrl.updateProjectTitle);
+// router.patch('/:projectId/title', ctrl.updateProjectName);
 
 module.exports = router;

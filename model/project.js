@@ -3,9 +3,9 @@ const { Schema, SchemaTypes } = mongoose;
 
 const projectSchema = new Schema(
   {
-    title: {
+    name: {
       type: String,
-      required: [true, 'Set title for project'],
+      required: [true, 'Set name for project'],
     },
     description: {
       type: String,
