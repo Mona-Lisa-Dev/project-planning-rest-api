@@ -1,6 +1,17 @@
 const Projects = require('../repository/projects');
 const { HttpCode } = require('../helpers/constants');
 
+const getAllProjects = async (req, res, next) => {
+  try {
+    const projects = await Projects.listProjects();
+    return res
+      .status(HttpCode.OK)
+      .json({ status: 'success', code: HttpCode.OK, data: { projects } });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const createProject = async (req, res, next) => {
   //   const userId = req.user.id;
   try {
@@ -14,7 +25,7 @@ const createProject = async (req, res, next) => {
 };
 
 module.exports = {
-  //   getAllProjects,
+  getAllProjects,
   //   getProjectById,
   createProject,
   //   deleteProject,
