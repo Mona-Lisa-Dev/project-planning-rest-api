@@ -10,10 +10,10 @@ const projectSchema = new Schema(
     description: {
       type: String,
     },
-    // owner: {
-    //   type: SchemaTypes.ObjectId,
-    //   ref: 'user',
-    // },
+    owner: {
+      type: SchemaTypes.ObjectId,
+      ref: 'user',
+    },
   },
   {
     versionKey: false,
