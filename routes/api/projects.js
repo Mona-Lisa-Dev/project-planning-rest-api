@@ -2,13 +2,14 @@ const express = require('express');
 const router = express.Router();
 
 // const guard = require('../../helpers/guard');
+const { validateCreateProject } = require('../../validation/projects');
 const ctrl = require('../../controllers/projects');
 
 router.get('/', ctrl.getAllProjects);
 
 // router.get('/:projectId', ctrl.getProjectById);
 
-router.post('/', ctrl.createProject);
+router.post('/', validateCreateProject, ctrl.createProject);
 
 // router.delete('/:projectId', ctrl.deleteProject);
 
