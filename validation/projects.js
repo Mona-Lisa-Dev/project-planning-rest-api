@@ -32,10 +32,18 @@ const validateId = async (id, next) => {
   });
 };
 
+const schemaNameProject = Joi.object({
+  name: Joi.string().min(4).max(30).required(),
+});
+
 module.exports.validateCreateProject = (req, _res, next) => {
   return validate(schemaCreateProject, req.body, next);
 };
 
 module.exports.validateObjectId = (req, _res, next) => {
   return validateId(req.params.projectId, next);
+};
+
+module.exports.validateNameProject = (req, _res, next) => {
+  return validate(schemaNameProject, req.body, next);
 };

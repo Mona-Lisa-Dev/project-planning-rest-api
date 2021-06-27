@@ -5,6 +5,7 @@ const router = express.Router();
 const {
   validateCreateProject,
   validateObjectId,
+  validateNameProject,
 } = require('../../validation/projects');
 
 const ctrl = require('../../controllers/projects');
@@ -15,8 +16,13 @@ router.get('/:projectId', validateObjectId, ctrl.getProjectById);
 
 router.post('/', validateCreateProject, ctrl.createProject);
 
-// router.delete('/:projectId', ctrl.deleteProject);
+router.delete('/:projectId', validateObjectId, ctrl.deleteProject);
 
-// router.patch('/:projectId/name', ctrl.updateProjectName);
+router.patch(
+  '/:projectId/name',
+  validateNameProject,
+  validateObjectId,
+  ctrl.updateProjectName,
+);
 
 module.exports = router;
