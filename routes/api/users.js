@@ -6,10 +6,14 @@ const {
   // getUser,
   logout,
 } = require('../../controllers/users');
+const {
+  validateSignupUser,
+  validateSigninUser,
+} = require('../../validation/users');
 const guard = require('../../helpers/guard');
 
-router.post('/signup', signup);
-router.post('/signin', signin);
+router.post('/signup', validateSignupUser, signup);
+router.post('/signin', validateSigninUser, signin);
 router.post('/logout', guard, logout);
 
 module.exports = router;
