@@ -55,5 +55,9 @@ const signin = async (req, res, next) => {
     next(error);
   }
 };
+const logout = async (req, res, next) => {
+  await usersModel.updateToken(req.user.id, null);
+  return res.status(HttpCode.NO_CONTENT).json({});
+};
 
-module.exports = { signup, signin };
+module.exports = { signup, signin, logout };
