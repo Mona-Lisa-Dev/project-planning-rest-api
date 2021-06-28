@@ -5,14 +5,14 @@ const guard = require('../../helpers/guard');
 
 const ctrl = require('../../controllers/sprints');
 
-router.post('/:projectId', guard, ctrl.createSprint);
+router.post('/', guard, ctrl.createSprint);
 
-router.get('/:projectId/getAllSprints', guard, ctrl.getAllSprints); //  пересекался с projects, пришлось изменить ендпоинт с "/:projectId'"
+router.get('/getAllSprints', guard, ctrl.getAllSprints); //  пересекался с projects, пришлось изменить ендпоинт с "/:projectId'"
 
-router.patch('/:projectId/:sprintId', guard, ctrl.updateSprint);
+router.patch('/:sprintId', guard, ctrl.updateSprint);
 
-router.delete('/:projectId/:sprintId', guard, ctrl.deleteSprint);
+router.delete('/:sprintId', guard, ctrl.deleteSprint);
 
-router.get('/:projectId/:sprintId', guard, ctrl.getSprintById);
+router.get('/:sprintId', guard, ctrl.getSprintById);
 
 module.exports = router;
