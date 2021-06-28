@@ -31,7 +31,7 @@ const sprintSchema = new Schema(
 
     owner: {
       type: SchemaTypes.ObjectId,
-      ref: 'poject',
+      ref: 'project',
     },
   },
   {

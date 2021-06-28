@@ -5,7 +5,7 @@ const addSprint = async body => {
   return result;
 };
 
-const getAllSprint = async projectId => {
+const getAllSprints = async projectId => {
   const results = await Sprint.find({ owner: projectId });
   return results;
 };
@@ -42,7 +42,7 @@ const getById = async (projectId, sprintId) => {
 module.exports = {
   addSprint,
   getById,
-  getAllSprint,
+  getAllSprints,
   removeSprint,
   updateSprint,
 };
