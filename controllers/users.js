@@ -17,27 +17,27 @@ const signup = async (req, res, next) => {
       });
     }
     const newUser = await usersModel.create(req.body);
-    console.log(`here shoul be user ${newUser}`);
-    const { id, name, email } = newUser;
+    console.log(`here should be user ${newUser}`);
+    const { _id, name, email } = newUser;
     return res.status(HttpCode.CREATED).json({
       status: 'success',
       code: HttpCode.CREATED,
-      data: { id, name, email },
+      data: { _id, name, email },
     });
   } catch (error) {
     next(error);
   }
 };
 
-const findEmail = async (req, res, next) => {
+const findUserByEmail = async (req, res, next) => {
   try {
     const user = await usersModel.findByEmail(req.body.email);
-    const { id, name, email } = user;
+    const { _id, name, email } = user;
     if (user) {
       return res.status(HttpCode.OK).json({
         status: 'success',
         code: HttpCode.OK,
-        data: { id, name, email },
+        data: { _id, name, email },
       });
     }
     return res.status(HttpCode.CONFLICT).json({
@@ -63,7 +63,7 @@ const login = async (req, res, next) => {
       });
     }
     const payload = { _id: user.id };
-    const token = jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: '2h' });
+    const token = jwt.sign(payload, JWT_SECRET_KEY);
     await usersModel.updateToken(user.id, token);
     return res.status(HttpCode.OK).json({
       status: 'success',
@@ -107,4 +107,10 @@ const logout = async (req, res, next) => {
   }
 };
 
-module.exports = { signup, login, logout, findEmail, getCurrentUser };
+module.exports = {
+  signup,
+  login,
+  logout,
+  findUserByEmail,
+  getCurrentUser,
+};
