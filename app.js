@@ -24,7 +24,7 @@ app.use(boolParser());
 
 app.use('/api/users', usersRouter);
 app.use('/api/projects', projectsRouter);
-app.use('/api/projects/:projectId', sprintsRouter);
+app.use('/api/projects/sprints', sprintsRouter);
 
 app.use((_req, res) => {
   res.status(HttpCode.NOT_FOUND).json({

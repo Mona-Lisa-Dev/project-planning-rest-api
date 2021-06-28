@@ -19,7 +19,7 @@ const createSprint = async (req, res, next) => {
 const getAllSprints = async (req, res, next) => {
   const projectId = req.params.projectId;
   try {
-    const sprints = await Sprints.getAllSprint(projectId);
+    const sprints = await Sprints.getAllSprints(projectId);
     return res
       .status(HttpCode.OK)
       .json({ status: 'success', code: HttpCode.OK, data: { sprints } });
@@ -31,6 +31,7 @@ const getAllSprints = async (req, res, next) => {
 const getSprintById = async (req, res, next) => {
   const projectId = req.params.projectId;
   const sprintId = req.params.sprintId;
+  console.log('projectId', projectId);
   try {
     const sprint = await Sprints.getById(projectId, sprintId);
     if (sprint) {
