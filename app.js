@@ -9,6 +9,7 @@ require('dotenv').config();
 const { HttpCode, Limit } = require('./helpers/constants');
 const usersRouter = require('./routes/api/users');
 const projectsRouter = require('./routes/api/projects');
+const sprintsRouter = require('./routes/api/sprints');
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.use(boolParser());
 
 app.use('/api/users', usersRouter);
 app.use('/api/projects', projectsRouter);
+app.use('/api/projects', sprintsRouter);
 
 app.use((_req, res) => {
   res.status(HttpCode.NOT_FOUND).json({

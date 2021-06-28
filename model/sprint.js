@@ -29,14 +29,28 @@ const sprintSchema = new Schema(
       },
     },
 
-    // owner: {
-    //   type: SchemaTypes.ObjectId,
-    //   ref: 'user',
-    // },
+    owner: {
+      type: SchemaTypes.ObjectId,
+      ref: 'poject',
+    },
   },
   {
     versionKey: false,
     timestamps: true,
+    toObject: {
+      virtuals: true,
+      // transform: function (_doc, ret) {
+      //   delete ret._id;
+      //   return ret;
+      // },
+    },
+    toJSON: {
+      virtuals: true,
+      transform: function (_doc, ret) {
+        delete ret._id;
+        return ret;
+      },
+    },
   },
 );
 
