@@ -80,7 +80,35 @@ const updateProjectName = async (req, res, next) => {
         message: 'Missing field Name!',
       });
     }
-    const project = await Projects.updateName(userId, projectId, req.body);
+    const project = await Projects.update(userId, projectId, req.body);
+    if (project) {
+      return res
+        .status(HttpCode.OK)
+        .json({ status: 'success', code: HttpCode.OK, data: { project } });
+    }
+
+    return res.status(HttpCode.NOT_FOUND).json({
+      status: 'error',
+      code: HttpCode.NOT_FOUND,
+      message: 'Not found',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const updateProjectDescription = async (req, res, next) => {
+  const userId = req.user.id;
+  const projectId = req.params.projectId;
+  try {
+    if (typeof req.body.description === 'undefined') {
+      return res.status(HttpCode.BAD_REQUEST).json({
+        status: 'error',
+        code: HttpCode.BAD_REQUEST,
+        message: 'Missing field Description!',
+      });
+    }
+    const project = await Projects.update(userId, projectId, req.body);
     if (project) {
       return res
         .status(HttpCode.OK)
@@ -164,4 +192,5 @@ module.exports = {
   updateProjectName,
   addParticipant,
   deleteParticipant,
+  updateProjectDescription,
 };

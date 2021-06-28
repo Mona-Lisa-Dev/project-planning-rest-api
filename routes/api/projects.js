@@ -8,6 +8,7 @@ const {
   validateObjectId,
   validateNameProject,
   validateEmail,
+  validateDescriptionProject,
 } = require('../../validation/projects');
 
 const ctrl = require('../../controllers/projects');
@@ -26,6 +27,14 @@ router.patch(
   validateNameProject,
   validateObjectId,
   ctrl.updateProjectName,
+);
+
+router.patch(
+  '/:projectId/description',
+  guard,
+  validateDescriptionProject,
+  validateObjectId,
+  ctrl.updateProjectDescription,
 );
 
 router.patch(
