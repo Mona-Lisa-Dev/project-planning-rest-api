@@ -25,6 +25,7 @@ const updateSprint = async (projectId, sprintId, body) => {
       owner: projectId,
     },
     { ...body },
+    { new: true },
   );
 
   return result;
