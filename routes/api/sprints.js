@@ -5,14 +5,40 @@ const guard = require('../../helpers/guard');
 
 const ctrl = require('../../controllers/sprints');
 
-router.post('/:projectId', guard, ctrl.createSprint);
+const {
+  validateCreateSprint,
+  validateObjectId,
+} = require('../../validation/sprints');
 
-router.get('/:projectId', guard, ctrl.getAllSprints); //  пересекался с projects, пришлось изменить ендпоинт с "/:projectId'"
+router.post(
+  '/:projectId',
+  guard,
+  validateCreateSprint,
+  validateObjectId,
+  ctrl.createSprint,
+);
 
-router.patch('/:projectId/:sprintId', guard, ctrl.updateSprint);
+router.get('/:projectId', guard, validateObjectId, ctrl.getAllSprints);
 
-router.delete('/:projectId/:sprintId', guard, ctrl.deleteSprint);
+router.patch(
+  '/:projectId/:sprintId',
+  validateObjectId,
+  guard,
+  ctrl.updateSprint,
+);
 
-router.get('/:projectId/:sprintId', guard, ctrl.getSprintById);
+router.delete(
+  '/:projectId/:sprintId',
+  guard,
+  validateObjectId,
+  ctrl.deleteSprint,
+);
+
+router.get(
+  '/:projectId/:sprintId',
+  guard,
+  validateObjectId,
+  ctrl.getSprintById,
+);
 
 module.exports = router;
