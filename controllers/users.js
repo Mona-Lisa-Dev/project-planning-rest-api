@@ -50,7 +50,7 @@ const findEmail = async (req, res, next) => {
   }
 };
 
-const signin = async (req, res, next) => {
+const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const user = await usersModel.findByEmail(email);
@@ -76,9 +76,35 @@ const signin = async (req, res, next) => {
     next(error);
   }
 };
-const logout = async (req, res, next) => {
-  await usersModel.updateToken(req.user.id, null);
-  return res.status(HttpCode.NO_CONTENT).json({});
+
+const getCurrentUser = async (req, res, next) => {
+  try {
+    const user = await usersModel.getUserByToken(req.params.token);
+    const { name, email } = req.user;
+    if (!user) {
+      return res.status(HttpCode.UNAUTHORIZED).json({
+        status: 'error',
+        code: HttpCode.UNAUTHORIZED,
+        message: 'User is not authorized',
+      });
+    }
+    return res.status(HttpCode.OK).json({
+      status: 'succes',
+      code: HttpCode.OK,
+      data: { name, email },
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
-module.exports = { signup, signin, logout, findEmail };
+const logout = async (req, res, next) => {
+  try {
+    await usersModel.updateToken(req.user.id, null);
+    return res.status(HttpCode.NO_CONTENT).json({});
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { signup, login, logout, findEmail, getCurrentUser };

@@ -38,6 +38,6 @@ module.exports.validateSignupUser = (req, _res, next) => {
   return validate(schemaSignupUser, req.body, next);
 };
 
-module.exports.validateSigninUser = (req, _res, next) => {
+module.exports.validateLoginUser = (req, _res, next) => {
   return validate(schemaSigninUser, req.body, next);
 };
