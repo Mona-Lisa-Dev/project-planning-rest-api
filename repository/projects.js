@@ -5,27 +5,25 @@ const addProject = async body => {
   return result;
 };
 
-const listProjects = async userId => {
-  // const results = await Project.find({});
-  // return results;
-  const results = await Project.find({ owner: userId }).populate({
-    path: 'owner',
-    select: 'name description -_id',
-  });
+const listProjects = async user => {
+  const results = await Project.find(
+    {
+      $or: [{ owner: user.id }, { participants: user.email }],
+    },
+    // { participants: 0 }, // позволяет вернуть данные без указанного поля
+  ).populate({ path: 'owner', select: 'name email _id' });
   return results;
 };
 
 const getById = async (userId, projectId) => {
-  // const getById = async projectId => {
   const result = await Project.findOne({
     _id: projectId,
     owner: userId,
-  }).populate({ path: 'owner', select: 'name description -_id' }); // .populate({}) позволяет показывать не просто id пользователя, а ту информацию,кот.указываем в select, "-"-убирает ненужные поля
+  }).populate({ path: 'owner', select: 'name email _id' }); // .populate({}) позволяет показывать не просто id пользователя, а ту информацию,кот.указываем в select, "-"-убирает ненужные поля
   return result;
 };
 
 const removeProject = async (userId, projectId) => {
-  // const removeProject = async projectId => {
   const result = await Project.findOneAndRemove({
     _id: projectId,
     owner: userId,
@@ -33,18 +31,51 @@ const removeProject = async (userId, projectId) => {
   return result;
 };
 
-const updateName = async (userId, contactId, body) => {
-  // const updateName = async (contactId, body) => {
+const updateName = async (userId, projectId, body) => {
   const result = await Project.findOneAndUpdate(
     {
-      _id: contactId,
-      owner: userId,
+      _id: projectId,
+      owner: userId, // позволяет менять Name только owner
     },
     { ...body },
     { new: true },
   ).populate({
     path: 'owner',
-    select: 'name description -_id',
+    select: 'name email _id',
+  });
+
+  return result;
+};
+
+const updateParticipants = async (_userId, projectId, body) => {
+  const newParticipant = [body.email];
+
+  const result = await Project.findOneAndUpdate(
+    {
+      _id: projectId,
+      // owner: userId, // позволяет добавлят participants только owner
+    },
+    { $addToSet: { participants: newParticipant } }, // $addToSet добавляет данные, если их еще нет в массиве:
+    { new: true },
+  ).populate({
+    path: 'owner',
+    select: 'name email _id',
+  });
+
+  return result;
+};
+
+const removeParticipant = async (_userId, projectId, body) => {
+  const result = await Project.findOneAndUpdate(
+    {
+      _id: projectId,
+      // owner: userId, // позволяет удалять participants только owner
+    },
+    { $pull: { participants: body.email } }, // $pull удаляет по значению
+    { new: true },
+  ).populate({
+    path: 'owner',
+    select: 'name email _id',
   });
 
   return result;
@@ -56,4 +87,6 @@ module.exports = {
   getById,
   removeProject,
   updateName,
+  updateParticipants,
+  removeParticipant,
 };

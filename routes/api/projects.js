@@ -7,13 +7,14 @@ const {
   validateCreateProject,
   validateObjectId,
   validateNameProject,
+  validateEmail,
 } = require('../../validation/projects');
 
 const ctrl = require('../../controllers/projects');
 
 router.get('/', guard, ctrl.getAllProjects);
-
-router.get('/:projectId', guard, validateObjectId, ctrl.getProjectById);
+// TODO  закомментить
+// router.get('/:projectId', guard, validateObjectId, ctrl.getProjectById);
 
 router.post('/', guard, validateCreateProject, ctrl.createProject);
 
@@ -25,6 +26,22 @@ router.patch(
   validateNameProject,
   validateObjectId,
   ctrl.updateProjectName,
+);
+
+router.patch(
+  '/:projectId/participant',
+  guard,
+  validateEmail,
+  validateObjectId,
+  ctrl.addParticipant,
+);
+
+router.delete(
+  '/:projectId/participant',
+  guard,
+  validateEmail,
+  validateObjectId,
+  ctrl.deleteParticipant,
 );
 
 module.exports = router;

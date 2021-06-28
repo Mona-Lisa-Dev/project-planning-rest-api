@@ -14,6 +14,7 @@ const projectSchema = new Schema(
       type: SchemaTypes.ObjectId,
       ref: 'user',
     },
+    participants: [String],
   },
   {
     versionKey: false,
