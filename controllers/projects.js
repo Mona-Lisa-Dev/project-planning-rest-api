@@ -17,6 +17,7 @@ const createProject = async (req, res, next) => {
   const userId = req.user.id;
   try {
     const project = await Projects.addProject({ ...req.body, owner: userId });
+    // console.log(project); // toObject
     return res
       .status(HttpCode.CREATED)
       .json({ status: 'success', code: HttpCode.CREATED, data: { project } });
@@ -30,7 +31,6 @@ const getProjectById = async (req, res, next) => {
   const projectId = req.params.projectId;
   try {
     const project = await Projects.getById(userId, projectId);
-    // const project = await Projects.getById(projectId);
     // console.log(project); // toObject
     if (project) {
       return res
@@ -52,7 +52,6 @@ const deleteProject = async (req, res, next) => {
   const projectId = req.params.projectId;
   try {
     const project = await Projects.removeProject(userId, projectId);
-    // const project = await Projects.removeProject(projectId);
     if (project) {
       return res.status(HttpCode.OK).json({
         status: 'success',
@@ -82,7 +81,38 @@ const updateProjectName = async (req, res, next) => {
       });
     }
     const project = await Projects.updateName(userId, projectId, req.body);
-    // const project = await Projects.updateName(projectId, req.body);
+    if (project) {
+      return res
+        .status(HttpCode.OK)
+        .json({ status: 'success', code: HttpCode.OK, data: { project } });
+    }
+
+    return res.status(HttpCode.NOT_FOUND).json({
+      status: 'error',
+      code: HttpCode.NOT_FOUND,
+      message: 'Not found',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+// addParticipant
+const addParticipant = async (req, res, next) => {
+  const userId = req.user.id;
+  const projectId = req.params.projectId;
+  try {
+    if (typeof req.body.email === 'undefined') {
+      return res.status(HttpCode.BAD_REQUEST).json({
+        status: 'error',
+        code: HttpCode.BAD_REQUEST,
+        message: 'Missing field Email!',
+      });
+    }
+    const project = await Projects.updateParticipants(
+      userId,
+      projectId,
+      req.body,
+    );
     if (project) {
       return res
         .status(HttpCode.OK)
@@ -105,4 +135,5 @@ module.exports = {
   getProjectById,
   deleteProject,
   updateProjectName,
+  addParticipant,
 };

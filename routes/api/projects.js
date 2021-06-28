@@ -7,12 +7,13 @@ const {
   validateCreateProject,
   validateObjectId,
   validateNameProject,
+  validateEmail,
 } = require('../../validation/projects');
 
 const ctrl = require('../../controllers/projects');
 
 router.get('/', guard, ctrl.getAllProjects);
-
+// TODO  закомментить
 router.get('/:projectId', guard, validateObjectId, ctrl.getProjectById);
 
 router.post('/', guard, validateCreateProject, ctrl.createProject);
@@ -25,6 +26,14 @@ router.patch(
   validateNameProject,
   validateObjectId,
   ctrl.updateProjectName,
+);
+// эндпоинт (patch) /projects/projectId/addParticipant
+router.patch(
+  '/:projectId/addParticipant',
+  guard,
+  validateEmail,
+  validateObjectId,
+  ctrl.addParticipant,
 );
 
 module.exports = router;
