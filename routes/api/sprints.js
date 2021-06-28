@@ -7,7 +7,7 @@ const ctrl = require('../../controllers/sprints');
 
 router.post('/:projectId', guard, ctrl.createSprint);
 
-router.get('/getAllSprints/:projectId', guard, ctrl.getAllSprints); //  пересекался с projects, пришлось изменить ендпоинт с "/:projectId'"
+router.get('/:projectId/getAllSprints', guard, ctrl.getAllSprints); //  пересекался с projects, пришлось изменить ендпоинт с "/:projectId'"
 
 router.patch('/:projectId/:sprintId', guard, ctrl.updateSprint);
 

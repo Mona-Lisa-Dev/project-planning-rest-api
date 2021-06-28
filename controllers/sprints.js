@@ -4,7 +4,7 @@ const { HttpCode } = require('../helpers/constants');
 const createSprint = async (req, res, next) => {
   const projectId = req.params.projectId;
   try {
-    const sprint = await Sprints.addSprint(projectId, {
+    const sprint = await Sprints.addSprint({
       ...req.body,
       owner: projectId,
     });
