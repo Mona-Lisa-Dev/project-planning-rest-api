@@ -27,7 +27,7 @@ router.patch(
   validateObjectId,
   ctrl.updateProjectName,
 );
-// эндпоинт (patch) /projects/projectId/addParticipant
+
 router.patch(
   '/:projectId/addParticipant',
   guard,

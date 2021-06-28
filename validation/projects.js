@@ -14,7 +14,7 @@ const schemaNameProject = Joi.object({
 const schemaEmail = Joi.object({
   email: Joi.string().required(),
   //   email: Joi.string().email({
-  //     minDomainSegments: 6,
+  //     minDomainSegments: 4,
   //     tlds: { allow: ['com', 'net', 'ua','ru','co'] },
   //   }).required(),
 });

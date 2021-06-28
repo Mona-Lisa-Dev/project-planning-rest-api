@@ -5,11 +5,13 @@ const addProject = async body => {
   return result;
 };
 
-const listProjects = async userId => {
-  const results = await Project.find({ owner: userId }).populate({
-    path: 'owner',
-    select: 'name email _id',
-  });
+const listProjects = async user => {
+  const results = await Project.find(
+    {
+      $or: [{ owner: user.id }, { participants: user.email }],
+    },
+    // { participants: 0 }, // позволяет вернуть данные без указанного поля
+  ).populate({ path: 'owner', select: 'name email _id' });
   return results;
 };
 
@@ -44,13 +46,9 @@ const updateName = async (userId, projectId, body) => {
 
   return result;
 };
-// updateParticipants // participants
+
 const updateParticipants = async (userId, projectId, body) => {
   const newParticipant = [body.email];
-  console.log(
-    '🚀 ~ file: projects.js ~ line 50 ~ updateParticipants ~ newParticipant',
-    newParticipant,
-  );
 
   const result = await Project.findOneAndUpdate(
     {

@@ -2,9 +2,9 @@ const Projects = require('../repository/projects');
 const { HttpCode } = require('../helpers/constants');
 
 const getAllProjects = async (req, res, next) => {
-  const userId = req.user.id;
+  const user = req.user;
   try {
-    const projects = await Projects.listProjects(userId);
+    const projects = await Projects.listProjects(user);
     return res
       .status(HttpCode.OK)
       .json({ status: 'success', code: HttpCode.OK, data: { projects } });
@@ -96,7 +96,7 @@ const updateProjectName = async (req, res, next) => {
     next(error);
   }
 };
-// addParticipant
+
 const addParticipant = async (req, res, next) => {
   const userId = req.user.id;
   const projectId = req.params.projectId;
