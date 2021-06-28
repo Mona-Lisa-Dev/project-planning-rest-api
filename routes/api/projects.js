@@ -14,7 +14,7 @@ const ctrl = require('../../controllers/projects');
 
 router.get('/', guard, ctrl.getAllProjects);
 // TODO  закомментить
-router.get('/:projectId', guard, validateObjectId, ctrl.getProjectById);
+// router.get('/:projectId', guard, validateObjectId, ctrl.getProjectById);
 
 router.post('/', guard, validateCreateProject, ctrl.createProject);
 
@@ -29,11 +29,19 @@ router.patch(
 );
 
 router.patch(
-  '/:projectId/addParticipant',
+  '/:projectId/participant',
   guard,
   validateEmail,
   validateObjectId,
   ctrl.addParticipant,
+);
+
+router.delete(
+  '/:projectId/participant',
+  guard,
+  validateEmail,
+  validateObjectId,
+  ctrl.deleteParticipant,
 );
 
 module.exports = router;

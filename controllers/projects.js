@@ -98,7 +98,7 @@ const updateProjectName = async (req, res, next) => {
 };
 
 const addParticipant = async (req, res, next) => {
-  const userId = req.user.id;
+  const userId = req.user.id; // TODO  userId  проверить используется ли в итоге
   const projectId = req.params.projectId;
   try {
     if (typeof req.body.email === 'undefined') {
@@ -129,6 +129,33 @@ const addParticipant = async (req, res, next) => {
   }
 };
 
+const deleteParticipant = async (req, res, next) => {
+  const userId = req.user.id; // TODO  userId  проверить используется ли в итоге
+  const projectId = req.params.projectId;
+  try {
+    const project = await Projects.removeParticipant(
+      userId,
+      projectId,
+      req.body,
+    );
+    if (project) {
+      return res.status(HttpCode.OK).json({
+        status: 'success',
+        code: HttpCode.OK,
+        message: 'Participant deleted',
+        data: { project },
+      });
+    }
+    return res.status(HttpCode.NOT_FOUND).json({
+      status: 'error',
+      code: HttpCode.NOT_FOUND,
+      message: 'Not found',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getAllProjects,
   createProject,
@@ -136,4 +163,5 @@ module.exports = {
   deleteProject,
   updateProjectName,
   addParticipant,
+  deleteParticipant,
 };
