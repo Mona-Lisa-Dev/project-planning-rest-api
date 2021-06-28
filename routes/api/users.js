@@ -3,8 +3,7 @@ const router = express.Router();
 const {
   signup,
   login,
-  // findEmail,
-  getAllUsers,
+  findUserByEmail,
   getCurrentUser,
   logout,
 } = require('../../controllers/users');
@@ -14,10 +13,9 @@ const {
 } = require('../../validation/users');
 const guard = require('../../helpers/guard');
 
-router.get('/', getAllUsers);
+router.get('/', findUserByEmail); // enter data: raw body JSON format - returns id, name, email
 router.post('/signup', validateSignupUser, signup);
 router.post('/login', validateLoginUser, login);
-// router.get('/find', findEmail);
 router.get('/current', guard, getCurrentUser);
 router.post('/logout', guard, logout);
 

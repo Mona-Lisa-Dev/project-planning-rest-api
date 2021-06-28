@@ -1,20 +1,5 @@
 const User = require('../model/user');
 
-const getAll = async query => {
-  // const { limit = 10, offset = 0, filter } = query;
-  const results = await User.paginate(
-    {},
-    {
-      limit: 10,
-      offset: 0,
-      select: 'email -_id',
-      // filter ? filter.split('|').join(' ') : '',
-    },
-  );
-  const { docs: users, totalDocs: total } = results;
-  return { users, total };
-};
-
 const findById = async id => {
   return await User.findOne({ _id: id });
 };
@@ -33,10 +18,14 @@ const getUserByToken = async (token, body) => {
   return result;
 };
 
+const updateToken = async (id, token) => {
+  return await User.updateOne({ _id: id }, { token });
+};
+
 module.exports = {
-  getAll,
   findById,
   findByEmail,
   create,
+  updateToken,
   getUserByToken,
 };
