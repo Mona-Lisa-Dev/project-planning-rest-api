@@ -13,6 +13,11 @@ const create = async options => {
   return await user.save();
 };
 
+const getUserByToken = async (token, body) => {
+  const result = await User.findOne({ token }, { ...body });
+  return result;
+};
+
 const updateToken = async (id, token) => {
   return await User.findByIdAndUpdate({ _id: id }, { token });
 };
@@ -22,9 +27,9 @@ const updateUser = async (id, body) => {
   return result;
 };
 
-const getUserByVerifyToken = async token => {
-  return await User.findOne({ verifyToken: token });
-};
+// const getUserByVerifyToken = async token => {
+//   return await User.findOne({ verifyToken: token });
+// };
 
 const updateVerifyToken = async (id, verify = true, token = null) => {
   return await User.findByIdAndUpdate(id, { verify, verifyToken: token });
@@ -36,6 +41,6 @@ module.exports = {
   create,
   updateToken,
   updateUser,
-  getUserByVerifyToken,
+  getUserByToken,
   updateVerifyToken,
 };
