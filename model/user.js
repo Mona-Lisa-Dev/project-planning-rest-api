@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
+const mongoosePaginate = require('mongoose-paginate-v2');
 const bcrypt = require('bcryptjs');
 const SALT_FACTOR = 6;
 
@@ -40,6 +41,8 @@ userSchema.pre('save', async function (next) {
 userSchema.methods.validPassword = async function (password) {
   return bcrypt.compare(String(password), this.password);
 };
+
+userSchema.plugin(mongoosePaginate);
 
 const User = mongoose.model('user', userSchema);
 

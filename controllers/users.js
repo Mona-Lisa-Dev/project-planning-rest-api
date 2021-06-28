@@ -5,6 +5,27 @@ const usersModel = require('../repository/users');
 const { HttpCode } = require('../helpers/constants');
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
+const getAllUsers = async (req, res, next) => {
+  try {
+    // const {
+    //   users,
+    //    total, limit, offset
+    // } =
+    // const userId = req.users._id;filter
+    const { users, total, limit, offset } = await usersModel.getAll(
+      // userId,
+      req.query,
+    );
+    return res.status(HttpCode.OK).json({
+      status: 'succes',
+      code: HttpCode.OK,
+      data: { users, total, limit, offset },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const signup = async (req, res, next) => {
   try {
     const user = await usersModel.findByEmail(req.body.email);
@@ -107,4 +128,11 @@ const logout = async (req, res, next) => {
   }
 };
 
-module.exports = { signup, login, logout, findEmail, getCurrentUser };
+module.exports = {
+  signup,
+  login,
+  logout,
+  findEmail,
+  getCurrentUser,
+  getAllUsers,
+};

@@ -1,5 +1,20 @@
 const User = require('../model/user');
 
+const getAll = async query => {
+  // const { limit = 10, offset = 0, filter } = query;
+  const results = await User.paginate(
+    {},
+    {
+      limit: 10,
+      offset: 0,
+      select: 'email -_id',
+      // filter ? filter.split('|').join(' ') : '',
+    },
+  );
+  const { docs: users, totalDocs: total } = results;
+  return { users, total };
+};
+
 const findById = async id => {
   return await User.findOne({ _id: id });
 };
@@ -18,29 +33,10 @@ const getUserByToken = async (token, body) => {
   return result;
 };
 
-const updateToken = async (id, token) => {
-  return await User.findByIdAndUpdate({ _id: id }, { token });
-};
-
-const updateUser = async (id, body) => {
-  const result = await User.findByIdAndUpdate(id, { ...body }, { new: true });
-  return result;
-};
-
-// const getUserByVerifyToken = async token => {
-//   return await User.findOne({ verifyToken: token });
-// };
-
-const updateVerifyToken = async (id, verify = true, token = null) => {
-  return await User.findByIdAndUpdate(id, { verify, verifyToken: token });
-};
-
 module.exports = {
+  getAll,
   findById,
   findByEmail,
   create,
-  updateToken,
-  updateUser,
   getUserByToken,
-  updateVerifyToken,
 };
