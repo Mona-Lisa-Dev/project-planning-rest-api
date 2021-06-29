@@ -13,6 +13,6 @@ router.patch('/:projectId/:sprintId', guard, ctrl.updateSprint);
 
 router.delete('/:projectId/:sprintId', guard, ctrl.deleteSprint);
 
-router.get('/:projectId/:sprintId', guard, ctrl.getSprintById);
+// router.get('/:projectId/:sprintId', guard, ctrl.getSprintById);
 
 module.exports = router;
