@@ -7,22 +7,24 @@ const ctrl = require('../../controllers/sprints');
 
 const {
   validateCreateSprint,
+  validateUpdateSprint,
   validateObjectId,
 } = require('../../validation/sprints');
 
 router.post(
   '/:projectId',
   guard,
-  validateCreateSprint,
   validateObjectId,
+  validateCreateSprint,
   ctrl.createSprint,
 );
 
 router.get('/:projectId', guard, validateObjectId, ctrl.getAllSprints);
 
 router.patch(
-  '/:projectId/:sprintId',
+  '/:projectId/:sprintId/name',
   validateObjectId,
+  validateUpdateSprint,
   guard,
   ctrl.updateSprint,
 );

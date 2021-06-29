@@ -9,6 +9,10 @@ const schemaCreateSprint = Joi.object({
   duration: Joi.number().required(),
 });
 
+const schemaUpdateSprint = Joi.object({
+  name: Joi.string().min(4).max(30).required(),
+});
+
 const validate = async (schema, body, next) => {
   try {
     await schema.validateAsync(body);
@@ -20,17 +24,6 @@ const validate = async (schema, body, next) => {
     });
   }
 };
-
-// const validateId = async (id, next) => {
-//   if (mongoose.isValidObjectId(id)) {
-//     next();
-//     return;
-//   }
-//   next({
-//     status: HttpCode.BAD_REQUEST,
-//     message: `Id is not valid`,
-//   });
-// };
 
 const validateId = async (projectId, sprintId, next) => {
   projectId &&
@@ -52,6 +45,10 @@ const validateId = async (projectId, sprintId, next) => {
 
 module.exports.validateCreateSprint = (req, _res, next) => {
   return validate(schemaCreateSprint, req.body, next);
+};
+
+module.exports.validateUpdateSprint = (req, _res, next) => {
+  return validate(schemaUpdateSprint, req.body, next);
 };
 
 module.exports.validateObjectId = (req, _res, next) => {

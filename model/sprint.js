@@ -24,7 +24,6 @@ const sprintSchema = new Schema(
       default: function () {
         const endDate = new Date(this.startDate);
         endDate.setDate(this.startDate.getDate() + this.duration);
-        endDate.toLocaleDateString(); //  TODO: отрефакторить
         return endDate;
       },
     },
