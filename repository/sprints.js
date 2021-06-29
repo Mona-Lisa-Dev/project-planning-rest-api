@@ -6,14 +6,14 @@ const addSprint = async body => {
 };
 
 const getAllSprints = async projectId => {
-  const results = await Sprint.find({ owner: projectId });
+  const results = await Sprint.find({ project: projectId });
   return results;
 };
 
 const removeSprint = async (projectId, sprintId) => {
   const result = await Sprint.findOneAndRemove({
     _id: sprintId,
-    owner: projectId,
+    project: projectId,
   });
   return result;
 };
@@ -22,7 +22,7 @@ const updateSprint = async (projectId, sprintId, body) => {
   const result = await Sprint.findOneAndUpdate(
     {
       _id: sprintId,
-      owner: projectId,
+      project: projectId,
     },
     { ...body },
     { new: true },
@@ -34,7 +34,7 @@ const updateSprint = async (projectId, sprintId, body) => {
 const getById = async (projectId, sprintId) => {
   const result = await Sprint.findOne({
     _id: sprintId,
-    owner: projectId,
+    project: projectId,
   });
   return result;
 };
