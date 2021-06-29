@@ -5,7 +5,9 @@ const { HttpCode } = require('../helpers/constants');
 
 const schemaCreateSprint = Joi.object({
   name: Joi.string().min(4).max(30).required(),
-  startDate: Joi.date().required(),
+  startDate: Joi.date().required().messages({
+    'date.base': `startDate should be YYYY-MM-DD`,
+  }),
   duration: Joi.number().required(),
 });
 
