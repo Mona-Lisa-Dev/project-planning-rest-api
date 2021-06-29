@@ -30,7 +30,6 @@ const getAllSprints = async (req, res, next) => {
 
 const getSprintById = async (req, res, next) => {
   const { projectId, sprintId } = req.params;
-
   try {
     const sprint = await Sprints.getById(projectId, sprintId);
     if (sprint) {

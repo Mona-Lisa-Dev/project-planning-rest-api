@@ -10,6 +10,7 @@ const { HttpCode, Limit } = require('./helpers/constants');
 const usersRouter = require('./routes/api/users');
 const projectsRouter = require('./routes/api/projects');
 const sprintsRouter = require('./routes/api/sprints');
+const tasksRouter = require('./routes/api/tasks');
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use(boolParser());
 app.use('/api/users', usersRouter);
 app.use('/api/projects', projectsRouter);
 app.use('/api/sprints', sprintsRouter);
+app.use('/api/projects/sprints/tasks', tasksRouter);
 
 app.use((_req, res) => {
   res.status(HttpCode.NOT_FOUND).json({

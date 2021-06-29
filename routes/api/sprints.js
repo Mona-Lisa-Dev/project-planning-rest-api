@@ -4,7 +4,6 @@ const router = express.Router();
 const guard = require('../../helpers/guard');
 
 const ctrl = require('../../controllers/sprints');
-
 const {
   validateCreateSprint,
   validateUpdateSprint,
