@@ -11,6 +11,7 @@ const sprintSchema = new Schema(
     startDate: {
       type: Date,
       required: true,
+      transform: d => `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`,
     },
 
     duration: {
@@ -24,12 +25,12 @@ const sprintSchema = new Schema(
       default: function () {
         const endDate = new Date(this.startDate);
         endDate.setDate(this.startDate.getDate() + this.duration);
-        endDate.toLocaleDateString(); //  TODO: отрефакторить
         return endDate;
       },
+      transform: d => `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`,
     },
 
-    owner: {
+    project: {
       type: SchemaTypes.ObjectId,
       ref: 'project',
     },

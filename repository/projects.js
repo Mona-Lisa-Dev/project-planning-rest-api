@@ -31,11 +31,11 @@ const removeProject = async (userId, projectId) => {
   return result;
 };
 
-const updateName = async (userId, projectId, body) => {
+const update = async (userId, projectId, body) => {
   const result = await Project.findOneAndUpdate(
     {
       _id: projectId,
-      owner: userId, // позволяет менять Name только owner
+      owner: userId, // позволяет менять Name или  Description только owner
     },
     { ...body },
     { new: true },
@@ -86,7 +86,7 @@ module.exports = {
   listProjects,
   getById,
   removeProject,
-  updateName,
+  update,
   updateParticipants,
   removeParticipant,
 };

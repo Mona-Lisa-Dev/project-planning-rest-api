@@ -6,7 +6,7 @@ const createSprint = async (req, res, next) => {
   try {
     const sprint = await Sprints.addSprint({
       ...req.body,
-      owner: projectId,
+      project: projectId,
     });
     return res
       .status(HttpCode.CREATED)
@@ -29,9 +29,7 @@ const getAllSprints = async (req, res, next) => {
 };
 
 const getSprintById = async (req, res, next) => {
-  const projectId = req.params.projectId;
-  const sprintId = req.params.sprintId;
-  // console.log('projectId', projectId);
+  const { projectId, sprintId } = req.params;
   try {
     const sprint = await Sprints.getById(projectId, sprintId);
     if (sprint) {
@@ -50,8 +48,8 @@ const getSprintById = async (req, res, next) => {
 };
 
 const deleteSprint = async (req, res, next) => {
-  const projectId = req.params.projectId;
-  const sprintId = req.params.sprintId;
+  const { projectId, sprintId } = req.params;
+
   try {
     const sprint = await Sprints.removeSprint(projectId, sprintId);
     if (sprint) {
@@ -72,13 +70,14 @@ const deleteSprint = async (req, res, next) => {
 };
 
 const updateSprint = async (req, res, next) => {
-  const projectId = req.params.projectId;
-  const sprintId = req.params.sprintId;
+  const { projectId, sprintId } = req.params;
+
   try {
     if (typeof req.body.name === 'undefined') {
       return res.status(HttpCode.BAD_REQUEST).json({
         status: 'error',
         code: HttpCode.BAD_REQUEST,
+        message: 'Missing field Name!',
       });
     }
     const sprint = await Sprints.updateSprint(projectId, sprintId, req.body);

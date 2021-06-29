@@ -25,7 +25,7 @@ app.use(boolParser());
 
 app.use('/api/users', usersRouter);
 app.use('/api/projects', projectsRouter);
-app.use('/api/projects/sprints', sprintsRouter);
+app.use('/api/sprints', sprintsRouter);
 app.use('/api/projects/sprints/tasks', tasksRouter);
 
 app.use((_req, res) => {

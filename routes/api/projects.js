@@ -8,13 +8,14 @@ const {
   validateObjectId,
   validateNameProject,
   validateEmail,
+  validateDescriptionProject,
 } = require('../../validation/projects');
 
 const ctrl = require('../../controllers/projects');
 
 router.get('/', guard, ctrl.getAllProjects);
-// TODO  закомментить
-// router.get('/:projectId', guard, validateObjectId, ctrl.getProjectById);
+
+router.get('/:projectId', guard, validateObjectId, ctrl.getProjectById);
 
 router.post('/', guard, validateCreateProject, ctrl.createProject);
 
@@ -26,6 +27,14 @@ router.patch(
   validateNameProject,
   validateObjectId,
   ctrl.updateProjectName,
+);
+
+router.patch(
+  '/:projectId/description',
+  guard,
+  validateDescriptionProject,
+  validateObjectId,
+  ctrl.updateProjectDescription,
 );
 
 router.patch(

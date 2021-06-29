@@ -19,6 +19,10 @@ const schemaEmail = Joi.object({
   //   }).required(),
 });
 
+const schemaDescriptionProject = Joi.object({
+  description: Joi.string().min(4).max(30).required(),
+});
+
 const validate = async (schema, body, next) => {
   try {
     await schema.validateAsync(body);
@@ -56,4 +60,8 @@ module.exports.validateNameProject = (req, _res, next) => {
 
 module.exports.validateEmail = (req, _res, next) => {
   return validate(schemaEmail, req.body, next);
+};
+
+module.exports.validateDescriptionProject = (req, _res, next) => {
+  return validate(schemaDescriptionProject, req.body, next);
 };

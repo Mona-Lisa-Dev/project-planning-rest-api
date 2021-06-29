@@ -18,9 +18,7 @@ const createTask = async (req, res, next) => {
 };
 
 const getTaskById = async (req, res, next) => {
-  const sprintId = req.params.sprintId;
-  const taskId = req.params.taskId;
-
+  const { sprintId, taskId } = req.params;
   try {
     const task = await Tasks.getTaskById(sprintId, taskId);
     if (task) {
@@ -39,17 +37,15 @@ const getTaskById = async (req, res, next) => {
 };
 
 const updateTask = async (req, res, next) => {
-  const sprintId = req.params.sprintId;
-  const taskId = req.params.taskId;
-  console.log(sprintId, taskId);
+  const { sprintId, taskId } = req.params;
   try {
-    // if (req.body.spentHours === 0) {
-    //   return res.status(HttpCode.BAD_REQUEST).json({
-    //     status: 'error',
-    //     code: HttpCode.BAD_REQUEST,
-    //     message: 'Please, enter number, that is more than 0',
-    //   });
-    // }
+    if (req.body.spentHours === 0) {
+      return res.status(HttpCode.BAD_REQUEST).json({
+        status: 'error',
+        code: HttpCode.BAD_REQUEST,
+        message: 'Please, enter number, that is more than 0',
+      });
+    }
     const task = await Tasks.updateTask(sprintId, taskId, req.body);
     console.log(task);
     if (task) {
@@ -70,7 +66,6 @@ const updateTask = async (req, res, next) => {
 
 const getAllTasks = async (req, res, next) => {
   const sprintId = req.params.sprintId;
-  // console.log(sprintId);
   try {
     const tasks = await Tasks.allTasks(sprintId);
     return res
@@ -82,8 +77,7 @@ const getAllTasks = async (req, res, next) => {
 };
 
 const deleteTask = async (req, res, next) => {
-  const sprintId = req.params.sprintId;
-  const taskId = req.params.taskId;
+  const { sprintId, taskId } = req.params;
   console.log(sprintId);
   try {
     const task = await Tasks.removeTask(sprintId, taskId);
