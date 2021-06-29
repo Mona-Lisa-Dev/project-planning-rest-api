@@ -29,7 +29,7 @@ const sprintSchema = new Schema(
       },
     },
 
-    owner: {
+    project: {
       type: SchemaTypes.ObjectId,
       ref: 'project',
     },

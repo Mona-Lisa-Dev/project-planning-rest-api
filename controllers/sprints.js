@@ -6,7 +6,7 @@ const createSprint = async (req, res, next) => {
   try {
     const sprint = await Sprints.addSprint({
       ...req.body,
-      owner: projectId,
+      project: projectId,
     });
     return res
       .status(HttpCode.CREATED)
