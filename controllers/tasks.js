@@ -47,7 +47,6 @@ const updateTask = async (req, res, next) => {
       });
     }
     const task = await Tasks.updateTask(sprintId, taskId, req.body);
-    console.log(task);
     if (task) {
       return res
         .status(HttpCode.OK)
@@ -78,7 +77,6 @@ const getAllTasks = async (req, res, next) => {
 
 const deleteTask = async (req, res, next) => {
   const { sprintId, taskId } = req.params;
-  console.log(sprintId);
   try {
     const task = await Tasks.removeTask(sprintId, taskId);
     if (task) {
