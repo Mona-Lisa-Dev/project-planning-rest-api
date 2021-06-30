@@ -2,12 +2,12 @@ const Tasks = require('../repository/tasks');
 const { HttpCode } = require('../helpers/constants');
 
 const createTask = async (req, res, next) => {
-  const sprintId = req.params.sprintId;
-  console.log(sprintId);
+  const { projectId, sprintId } = req.params;
   try {
     const task = await Tasks.createTask({
       ...req.body,
       sprint: sprintId,
+      project: projectId,
     });
     return res
       .status(HttpCode.CREATED)

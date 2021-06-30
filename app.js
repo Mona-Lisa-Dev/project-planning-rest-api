@@ -26,7 +26,7 @@ app.use(boolParser());
 app.use('/api/users', usersRouter);
 app.use('/api/projects', projectsRouter);
 app.use('/api/sprints', sprintsRouter);
-app.use('/api/projects/sprints/tasks', tasksRouter);
+app.use('/api/tasks', tasksRouter);
 
 app.use((_req, res) => {
   res.status(HttpCode.NOT_FOUND).json({

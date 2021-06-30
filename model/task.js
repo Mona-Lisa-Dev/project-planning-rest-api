@@ -30,10 +30,15 @@ const taskSchema = new Schema(
       default: this.spentHours,
     },
 
+    project: {
+      type: SchemaTypes.ObjectId,
+      ref: 'project',
+    },
+
     sprint: {
       type: SchemaTypes.ObjectId,
       ref: 'sprint',
-      features: 'duration',
+      // features: 'duration',
     },
   },
   {
