@@ -69,6 +69,7 @@ const login = async (req, res, next) => {
       status: 'success',
       code: HttpCode.OK,
       data: {
+        email,
         token,
       },
     });
@@ -89,7 +90,7 @@ const getCurrentUser = async (req, res, next) => {
       });
     }
     return res.status(HttpCode.OK).json({
-      status: 'succes',
+      status: 'success',
       code: HttpCode.OK,
       data: { name, email },
     });
