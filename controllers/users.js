@@ -17,12 +17,18 @@ const signup = async (req, res, next) => {
       });
     }
     const newUser = await usersModel.create(req.body);
-    console.log(`here should be user ${newUser}`);
-    const { _id, name, email } = newUser;
+    // console.log(`here should be user ${newUser}`);
+    const { _id: id, name, email } = newUser;
     return res.status(HttpCode.CREATED).json({
       status: 'success',
       code: HttpCode.CREATED,
-      data: { _id, name, email },
+      data: {
+        user: {
+          id,
+          name,
+          email,
+        },
+      },
     });
   } catch (error) {
     next(error);
@@ -32,12 +38,18 @@ const signup = async (req, res, next) => {
 const findUserByEmail = async (req, res, next) => {
   try {
     const user = await usersModel.findByEmail(req.body.email);
-    const { _id, name, email } = user;
+    const { _id: id, name, email } = user;
     if (user) {
       return res.status(HttpCode.OK).json({
         status: 'success',
         code: HttpCode.OK,
-        data: { _id, name, email },
+        data: {
+          user: {
+            id,
+            name,
+            email,
+          },
+        },
       });
     }
     return res.status(HttpCode.CONFLICT).json({
@@ -54,6 +66,7 @@ const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const user = await usersModel.findByEmail(email);
+    const { _id: id, name } = user;
     const isValidPassword = await user?.validPassword(password);
     if (!user || !isValidPassword) {
       return res.status(HttpCode.UNAUTHORIZED).json({
@@ -69,8 +82,12 @@ const login = async (req, res, next) => {
       status: 'success',
       code: HttpCode.OK,
       data: {
-        email,
         token,
+        user: {
+          id,
+          name,
+          email,
+        },
       },
     });
   } catch (error) {
@@ -80,19 +97,17 @@ const login = async (req, res, next) => {
 
 const getCurrentUser = async (req, res, next) => {
   try {
-    const user = await usersModel.getUserByToken(req.params.token);
-    const { name, email } = req.user;
-    if (!user) {
-      return res.status(HttpCode.UNAUTHORIZED).json({
-        status: 'error',
-        code: HttpCode.UNAUTHORIZED,
-        message: 'User is not authorized',
-      });
-    }
+    const { _id: id, name, email } = req.user;
     return res.status(HttpCode.OK).json({
       status: 'success',
       code: HttpCode.OK,
-      data: { name, email },
+      data: {
+        user: {
+          id,
+          name,
+          email,
+        },
+      },
     });
   } catch (error) {
     next(error);

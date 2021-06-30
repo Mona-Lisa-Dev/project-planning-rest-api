@@ -10,10 +10,11 @@ const {
 const {
   validateSignupUser,
   validateLoginUser,
+  validateEmail,
 } = require('../../validation/users');
 const guard = require('../../helpers/guard');
-
-router.get('/', findUserByEmail); // enter data: raw body JSON format - returns id, name, email
+// TODO
+router.post('/', guard, validateEmail, findUserByEmail); // TODO  DELETE??? // enter data: raw body JSON format - returns id, name, email
 router.post('/signup', validateSignupUser, signup);
 router.post('/login', validateLoginUser, login);
 router.get('/current', guard, getCurrentUser);
