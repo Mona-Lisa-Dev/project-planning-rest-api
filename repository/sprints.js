@@ -1,4 +1,5 @@
 const Sprint = require('../model/sprint');
+const Task = require('../model/task');
 
 const addSprint = async body => {
   const result = await Sprint.create(body);
@@ -15,6 +16,11 @@ const removeSprint = async (projectId, sprintId) => {
     _id: sprintId,
     project: projectId,
   });
+  if (result) {
+    await Task.deleteMany({
+      project: projectId,
+    });
+  }
   return result;
 };
 
