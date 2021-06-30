@@ -12,7 +12,13 @@ const {
 
 const valid = require('../../validation/tasks');
 
-router.post('/:sprintId', guard, valid.validateCreateTask, createTask);
+router.post(
+  '/:projectId/:sprintId',
+  guard,
+  valid.validateCreateTask,
+  createTask,
+);
+
 router.patch(
   '/:sprintId/:taskId',
   guard,
