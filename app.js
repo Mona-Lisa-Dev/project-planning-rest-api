@@ -3,6 +3,8 @@ const logger = require('morgan');
 const cors = require('cors');
 const boolParser = require('express-query-boolean');
 const helmet = require('helmet');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
 const limiter = require('./helpers/limiter');
 require('dotenv').config();
 
@@ -27,6 +29,8 @@ app.use('/api/users', usersRouter);
 app.use('/api/projects', projectsRouter);
 app.use('/api/sprints', sprintsRouter);
 app.use('/api/tasks', tasksRouter);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use((_req, res) => {
   res.status(HttpCode.NOT_FOUND).json({
