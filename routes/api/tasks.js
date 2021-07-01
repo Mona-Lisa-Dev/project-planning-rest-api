@@ -15,6 +15,7 @@ const valid = require('../../validation/tasks');
 router.post(
   '/:projectId/:sprintId',
   guard,
+  valid.validateObjectIdProjectSprint,
   valid.validateCreateTask,
   createTask,
 );
@@ -22,11 +23,25 @@ router.post(
 router.patch(
   '/:sprintId/:taskId/day=:day/value=:value/spent=:spent',
   guard,
+  // TODO добавить валицию динамических параметров
   valid.validateUpdateHours,
   updateTask,
 );
-router.get('/:sprintId/:taskId', guard, getTaskById);
-router.get('/:sprintId', guard, getAllTasks); // !!!!!приветик
-router.delete('/:sprintId/:taskId', guard, deleteTask);
+
+router.get(
+  '/:sprintId/:taskId',
+  guard,
+  valid.validateObjectIdSprintTask,
+  getTaskById,
+);
+
+router.get('/:sprintId', guard, valid.validateObjectIdSprint, getAllTasks);
+
+router.delete(
+  '/:sprintId/:taskId',
+  guard,
+  valid.validateObjectIdSprintTask,
+  deleteTask,
+);
 
 module.exports = router;
