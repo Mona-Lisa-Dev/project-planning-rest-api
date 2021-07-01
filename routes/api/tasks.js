@@ -15,33 +15,18 @@ const valid = require('../../validation/tasks');
 router.post(
   '/:projectId/:sprintId',
   guard,
-  valid.validateObjectIdProjectSprint,
   valid.validateCreateTask,
   createTask,
 );
 
 router.patch(
-  '/:sprintId/:taskId',
+  '/:sprintId/:taskId/day=:day/value=:value/spent=:spent',
   guard,
-  valid.validateObjectIdSprintTask,
   valid.validateUpdateHours,
   updateTask,
 );
-
-router.get(
-  '/:sprintId/:taskId',
-  guard,
-  valid.validateObjectIdSprintTask,
-  getTaskById,
-);
-
-router.get('/:sprintId', guard, valid.validateObjectIdSprint, getAllTasks);
-
-router.delete(
-  '/:sprintId/:taskId',
-  guard,
-  valid.validateObjectIdSprintTask,
-  deleteTask,
-);
+router.get('/:sprintId/:taskId', guard, getTaskById);
+router.get('/:sprintId', guard, getAllTasks); // conflicts with router.get('/:projectId/:sprintId', guard, ctrl.getSprintById) - in sprints. Need to change endpoint!
+router.delete('/:sprintId/:taskId', guard, deleteTask);
 
 module.exports = router;
