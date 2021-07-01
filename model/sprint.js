@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const { Schema, SchemaTypes } = mongoose;
 
+const dayjs = require('dayjs');
+
 const sprintSchema = new Schema(
   {
     name: {
@@ -11,7 +13,7 @@ const sprintSchema = new Schema(
     startDate: {
       type: Date,
       required: true,
-      transform: d => `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`,
+      transform: date => dayjs(date).format('YYYY-MM-DD'),
     },
 
     duration: {
@@ -23,11 +25,9 @@ const sprintSchema = new Schema(
       type: Date,
       required: true,
       default: function () {
-        const endDate = new Date(this.startDate);
-        endDate.setDate(this.startDate.getDate() + this.duration);
-        return endDate;
+        return dayjs(this.startDate).add(this.duration, 'day');
       },
-      transform: d => `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`,
+      transform: date => dayjs(date).format('YYYY-MM-DD'),
     },
 
     project: {

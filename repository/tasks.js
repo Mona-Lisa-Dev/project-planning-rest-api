@@ -11,14 +11,16 @@ const getTaskById = async (sprintId, taskId) => {
   });
 };
 
-const updateTask = async (sprintId, taskId, body) => {
-  console.log(taskId, sprintId, body);
+const updateTask = async (sprintId, taskId, spent, arr) => {
   const result = await Task.findOneAndUpdate(
     {
       _id: taskId,
       sprint: sprintId,
     },
-    { ...body },
+    {
+      hoursSpent: arr,
+      allHours: spent,
+    },
     { new: true },
   );
   return result;
