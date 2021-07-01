@@ -1,13 +1,18 @@
 const Tasks = require('../repository/tasks');
+const Sprints = require('../repository/sprints');
 const { HttpCode } = require('../helpers/constants');
 
 const createTask = async (req, res, next) => {
   const { projectId, sprintId } = req.params;
+
+  const sprint = await Sprints.getById(projectId, sprintId);
+
   try {
     const task = await Tasks.createTask({
       ...req.body,
       sprint: sprintId,
       project: projectId,
+      durationSprint: sprint.duration,
     });
     return res
       .status(HttpCode.CREATED)
@@ -37,7 +42,8 @@ const getTaskById = async (req, res, next) => {
 };
 
 const updateTask = async (req, res, next) => {
-  const { sprintId, taskId } = req.params;
+  const { sprintId, taskId, day, value, spent } = req.params;
+
   try {
     if (req.body.spentHours === 0) {
       return res.status(HttpCode.BAD_REQUEST).json({
@@ -45,8 +51,21 @@ const updateTask = async (req, res, next) => {
         code: HttpCode.BAD_REQUEST,
         message: 'Please, enter number, that is more than 0',
       });
-    }
-    const task = await Tasks.updateTask(sprintId, taskId, req.body);
+    } // может и не понадобится
+
+    const findTask = await Tasks.getTaskById(sprintId, taskId);
+
+    const spendHoursArray = findTask.hoursSpent.map((el, i) =>
+      i === day - 1 ? value : el,
+    );
+
+    const task = await Tasks.updateTask(
+      sprintId,
+      taskId,
+      spent,
+      spendHoursArray,
+    );
+
     if (task) {
       return res
         .status(HttpCode.OK)
@@ -77,6 +96,7 @@ const getAllTasks = async (req, res, next) => {
 
 const deleteTask = async (req, res, next) => {
   const { sprintId, taskId } = req.params;
+  // console.log(sprintId);
   try {
     const task = await Tasks.removeTask(sprintId, taskId);
     if (task) {

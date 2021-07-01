@@ -13,11 +13,6 @@ const taskSchema = new Schema(
       required: true,
     },
 
-    spentHours: {
-      type: Number,
-      default: 0,
-    },
-
     // if needed, may be deleted
     isDone: {
       type: Boolean,
@@ -26,8 +21,19 @@ const taskSchema = new Schema(
 
     allHours: {
       type: Number,
-      ref: 'sprint',
-      default: this.spentHours,
+      default: 0,
+    },
+
+    durationSprint: {
+      type: Number,
+      default: 0,
+    },
+
+    hoursSpent: {
+      type: Array,
+      default: function () {
+        return new Array(this.durationSprint).fill(0);
+      },
     },
 
     project: {
