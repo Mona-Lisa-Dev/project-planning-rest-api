@@ -26,7 +26,7 @@ router.patch(
   updateTask,
 );
 router.get('/:sprintId/:taskId', guard, getTaskById);
-router.get('/:sprintId', guard, getAllTasks); // conflicts with router.get('/:projectId/:sprintId', guard, ctrl.getSprintById) - in sprints. Need to change endpoint!
+router.get('/:sprintId', guard, getAllTasks); // !!!!!приветик
 router.delete('/:sprintId/:taskId', guard, deleteTask);
 
 module.exports = router;
