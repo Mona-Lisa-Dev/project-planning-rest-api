@@ -53,4 +53,11 @@ router.delete(
   ctrl.deleteParticipant,
 );
 
+router.get(
+  '/:projectId/participant',
+  guard,
+  validateObjectId,
+  ctrl.getParticipants,
+);
+
 module.exports = router;
