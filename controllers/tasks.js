@@ -43,7 +43,6 @@ const getTaskById = async (req, res, next) => {
 
 const updateTask = async (req, res, next) => {
   const { sprintId, taskId, day, value, spent } = req.params;
-
   try {
     if (req.body.spentHours === 0) {
       return res.status(HttpCode.BAD_REQUEST).json({
@@ -57,6 +56,10 @@ const updateTask = async (req, res, next) => {
 
     const spendHoursArray = findTask.hoursSpent.map((el, i) =>
       i === day - 1 ? value : el,
+    );
+    console.log(
+      '🚀 ~ file: tasks.js ~ line 60 ~ updateTask ~ spendHoursArray',
+      spendHoursArray,
     );
 
     const task = await Tasks.updateTask(
