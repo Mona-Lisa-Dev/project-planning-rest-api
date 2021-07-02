@@ -45,7 +45,7 @@ router.patch(
   ctrl.addParticipant,
 );
 
-router.delete(
+router.post(
   '/:projectId/participant',
   guard,
   validateEmail,
