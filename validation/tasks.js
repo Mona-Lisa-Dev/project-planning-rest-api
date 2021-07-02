@@ -3,14 +3,10 @@ const Joi = require('joi');
 const { HttpCode } = require('../helpers/constants');
 
 const schemaCreateTask = Joi.object({
-  name: Joi.string().min(3).max(30).required(),
-  scheduledHours: Joi.number().min(1).max(40).required(),
-  spentHours: Joi.number().min(1).max(8).optional(),
+  name: Joi.string().required(),
+  scheduledHours: Joi.number().required(),
+  spentHours: Joi.number().optional(),
   isDone: Joi.boolean().optional(),
-});
-
-const schemaUpdateHours = Joi.object({
-  spentHours: Joi.number().required(),
 });
 
 const validate = async (schema, body, next) => {
@@ -52,10 +48,6 @@ const validateId = async (projectId, sprintId, taskId, next) => {
     });
 
   next();
-};
-
-module.exports.validateUpdateHours = (req, _res, next) => {
-  return validate(schemaUpdateHours, req.body, next);
 };
 
 module.exports.validateCreateTask = (req, _res, next) => {

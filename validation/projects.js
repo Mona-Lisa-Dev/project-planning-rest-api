@@ -3,12 +3,12 @@ const Joi = require('joi');
 const { HttpCode } = require('../helpers/constants');
 
 const schemaCreateProject = Joi.object({
-  name: Joi.string().min(4).max(30).required(),
-  description: Joi.string().min(4).max(30).optional(),
+  name: Joi.string().required(),
+  description: Joi.string().optional(),
 });
 
 const schemaNameProject = Joi.object({
-  name: Joi.string().min(4).max(30).required(),
+  name: Joi.string().required(),
 });
 
 const schemaEmail = Joi.object({
@@ -20,7 +20,7 @@ const schemaEmail = Joi.object({
 });
 
 const schemaDescriptionProject = Joi.object({
-  description: Joi.string().min(4).max(30).required(),
+  description: Joi.string().required(),
 });
 
 const validate = async (schema, body, next) => {

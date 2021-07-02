@@ -12,14 +12,13 @@ const taskSchema = new Schema(
       type: Number,
       required: true,
     },
-
     // if needed, may be deleted
     isDone: {
       type: Boolean,
       default: false,
     },
 
-    allHours: {
+    allHoursTask: {
       type: Number,
       default: 0,
     },
