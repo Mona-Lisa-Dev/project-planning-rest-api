@@ -21,10 +21,9 @@ router.post(
 );
 
 router.patch(
-  '/:sprintId/:taskId/day=:day/value=:value/spent=:spent',
+  '/:sprintId/:taskId/day=:day/value=:value',
   guard,
-  // TODO добавить валицию динамических параметров
-  valid.validateUpdateHours,
+  valid.validateObjectIdSprintTask,
   updateTask,
 );
 
