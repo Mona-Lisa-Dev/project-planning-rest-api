@@ -4,8 +4,16 @@ const { HttpCode } = require('../helpers/constants');
 
 const createTask = async (req, res, next) => {
   const { projectId, sprintId } = req.params;
+  const incomingScheduledTime = parseInt(req.body.scheduledTime);
 
-  const sprint = await Sprints.getById(projectId, sprintId);
+  const findSprint = await Sprints.getById(projectId, sprintId);
+
+  const currentScheduledTime = findSprint.allScheduledTime;
+
+  const sprint = await Sprints.updateSprint(projectId, sprintId, {
+    allScheduledTime: incomingScheduledTime + currentScheduledTime,
+  });
+
   try {
     const task = await Tasks.createTask({
       ...req.body,
@@ -14,6 +22,7 @@ const createTask = async (req, res, next) => {
       durationSprint: sprint.duration,
       startDate: sprint.startDate,
     });
+
     return res
       .status(HttpCode.CREATED)
       .json({ status: 'success', code: HttpCode.CREATED, data: { task } });

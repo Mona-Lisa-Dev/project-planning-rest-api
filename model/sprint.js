@@ -30,6 +30,16 @@ const sprintSchema = new Schema(
       transform: date => dayjs(date).format('YYYY-MM-DD'),
     },
 
+    allScheduledTime: {
+      type: Number,
+      default: 0,
+    },
+
+    // totalDaly: {
+    //   type: Number,
+    //   default: [],
+    // },
+
     project: {
       type: SchemaTypes.ObjectId,
       ref: 'project',
