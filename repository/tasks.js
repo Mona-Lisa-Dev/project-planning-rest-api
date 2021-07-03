@@ -11,35 +11,34 @@ const getTaskById = async (sprintId, taskId) => {
   });
 };
 
-const updateTask = async (sprintId, taskId, arr, daysArray, total) => {
+const updateTask = async (sprintId, taskId, taskByDays, totalTime) => {
   const result = await Task.findOneAndUpdate(
     {
       _id: taskId,
       sprint: sprintId,
     },
     {
-      hoursSpent: arr,
-      taskForDays: daysArray,
-      allHoursTask: total,
+      taskByDays,
+      totalTime,
     },
     { new: true },
   );
   return result;
 };
 
-const updateTotalTask = async (sprintId, taskId, total) => {
-  const result = await Task.findOneAndUpdate(
-    {
-      _id: taskId,
-      sprint: sprintId,
-    },
-    {
-      allHoursTask: total,
-    },
-    { new: true },
-  );
-  return result;
-};
+// const updateTotalTask = async (sprintId, taskId, total) => {
+//   const result = await Task.findOneAndUpdate(
+//     {
+//       _id: taskId,
+//       sprint: sprintId,
+//     },
+//     {
+//       allHoursTask: total,
+//     },
+//     { new: true },
+//   );
+//   return result;
+// };
 
 const allTasks = async sprintId => {
   return await Task.find({ sprint: sprintId });
@@ -55,5 +54,5 @@ module.exports = {
   updateTask,
   allTasks,
   removeTask,
-  updateTotalTask,
+  // updateTotalTask,
 };
