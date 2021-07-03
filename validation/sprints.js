@@ -4,7 +4,7 @@ const Joi = require('joi');
 const { HttpCode } = require('../helpers/constants');
 
 const schemaCreateSprint = Joi.object({
-  name: Joi.string().min(4).max(30).required(),
+  name: Joi.string().required(),
   startDate: Joi.date().required().messages({
     'date.base': `startDate should be YYYY-MM-DD`,
   }),
@@ -12,7 +12,7 @@ const schemaCreateSprint = Joi.object({
 });
 
 const schemaUpdateSprint = Joi.object({
-  name: Joi.string().min(4).max(30).required(),
+  name: Joi.string().required(),
 });
 
 const validate = async (schema, body, next) => {

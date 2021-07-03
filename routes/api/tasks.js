@@ -21,10 +21,9 @@ router.post(
 );
 
 router.patch(
-  '/:sprintId/:taskId',
+  '/:sprintId/:taskId/day=:day/value=:value',
   guard,
   valid.validateObjectIdSprintTask,
-  valid.validateUpdateHours,
   updateTask,
 );
 

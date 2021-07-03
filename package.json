@@ -20,6 +20,7 @@
     "cloudinary": "^1.25.2",
     "cors": "2.8.5",
     "cross-env": "7.0.3",
+    "dayjs": "^1.10.5",
     "dotenv": "^9.0.2",
     "eslint-plugin-jest": "^24.3.6",
     "express": "4.17.1",

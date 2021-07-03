@@ -1,13 +1,18 @@
 const Tasks = require('../repository/tasks');
+const Sprints = require('../repository/sprints');
 const { HttpCode } = require('../helpers/constants');
 
 const createTask = async (req, res, next) => {
   const { projectId, sprintId } = req.params;
+
+  const sprint = await Sprints.getById(projectId, sprintId);
+
   try {
     const task = await Tasks.createTask({
       ...req.body,
       sprint: sprintId,
       project: projectId,
+      durationSprint: sprint.duration,
     });
     return res
       .status(HttpCode.CREATED)
@@ -37,20 +42,51 @@ const getTaskById = async (req, res, next) => {
 };
 
 const updateTask = async (req, res, next) => {
-  const { sprintId, taskId } = req.params;
+  const { sprintId, taskId, day, value } = req.params;
   try {
-    if (req.body.spentHours === 0) {
-      return res.status(HttpCode.BAD_REQUEST).json({
+    const findTask = await Tasks.getTaskById(sprintId, taskId);
+    if (!findTask) {
+      return res.status(HttpCode.NOT_FOUND).json({
         status: 'error',
-        code: HttpCode.BAD_REQUEST,
-        message: 'Please, enter number, that is more than 0',
+        code: HttpCode.NOT_FOUND,
+        message: 'Task is not found',
       });
     }
-    const task = await Tasks.updateTask(sprintId, taskId, req.body);
-    if (task) {
-      return res
-        .status(HttpCode.OK)
-        .json({ status: 'success', code: HttpCode.OK, data: { task } });
+    const taskForDaysArray = findTask.taskForDays.map((el, i) => {
+      if (i === Number(day) - 1) {
+        el.hoursSpent = Number(value);
+        return el;
+      }
+      return el;
+    });
+
+    const spendHoursArray = findTask.hoursSpent.map((el, i) =>
+      i === Number(day) - 1 ? Number(value) : el,
+    );
+
+    const task = await Tasks.updateTask(
+      sprintId,
+      taskId,
+      spendHoursArray,
+      taskForDaysArray,
+    );
+
+    const totalHours = task.hoursSpent.reduce((sum, current) => {
+      return sum + current;
+    }, 0);
+
+    const taskTotalHours = await Tasks.updateTotalTask(
+      sprintId,
+      taskId,
+      totalHours,
+    );
+
+    if (taskTotalHours) {
+      return res.status(HttpCode.OK).json({
+        status: 'success',
+        code: HttpCode.OK,
+        data: { taskTotalHours },
+      });
     }
 
     return res.status(HttpCode.NOT_FOUND).json({
@@ -77,6 +113,7 @@ const getAllTasks = async (req, res, next) => {
 
 const deleteTask = async (req, res, next) => {
   const { sprintId, taskId } = req.params;
+  // console.log(sprintId);
   try {
     const task = await Tasks.removeTask(sprintId, taskId);
     if (task) {

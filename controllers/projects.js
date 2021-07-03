@@ -184,6 +184,27 @@ const deleteParticipant = async (req, res, next) => {
   }
 };
 
+const getParticipants = async (req, res, next) => {
+  const userId = req.user.id;
+  const { projectId } = req.params;
+  try {
+    const project = await Projects.getById(userId, projectId);
+    const { participants } = project;
+    if (project) {
+      return res
+        .status(HttpCode.OK)
+        .json({ status: 'success', code: HttpCode.OK, data: { participants } }); // toJSON
+    }
+    return res.status(HttpCode.NOT_FOUND).json({
+      status: 'error',
+      code: HttpCode.NOT_FOUND,
+      message: 'Not found',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getAllProjects,
   createProject,
@@ -193,4 +214,5 @@ module.exports = {
   addParticipant,
   deleteParticipant,
   updateProjectDescription,
+  getParticipants,
 };

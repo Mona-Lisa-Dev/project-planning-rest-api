@@ -12,22 +12,37 @@ const taskSchema = new Schema(
       type: Number,
       required: true,
     },
-
-    spentHours: {
-      type: Number,
-      default: 0,
-    },
-
     // if needed, may be deleted
     isDone: {
       type: Boolean,
       default: false,
     },
 
-    allHours: {
+    allHoursTask: {
       type: Number,
-      ref: 'sprint',
-      default: this.spentHours,
+      default: 0,
+    },
+
+    durationSprint: {
+      type: Number,
+      default: 0,
+    },
+
+    hoursSpent: {
+      type: Array,
+      default: function () {
+        return new Array(this.durationSprint).fill(0);
+      },
+    },
+
+    taskForDays: {
+      type: Array,
+      default: function () {
+        return new Array(this.durationSprint).fill({
+          date: new Date(),
+          hoursSpent: 0,
+        });
+      },
     },
 
     project: {
@@ -38,7 +53,6 @@ const taskSchema = new Schema(
     sprint: {
       type: SchemaTypes.ObjectId,
       ref: 'sprint',
-      // features: 'duration',
     },
   },
   {

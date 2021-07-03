@@ -45,12 +45,19 @@ router.patch(
   ctrl.addParticipant,
 );
 
-router.delete(
+router.post(
   '/:projectId/participant',
   guard,
   validateEmail,
   validateObjectId,
   ctrl.deleteParticipant,
+);
+
+router.get(
+  '/:projectId/participant',
+  guard,
+  validateObjectId,
+  ctrl.getParticipants,
 );
 
 module.exports = router;
