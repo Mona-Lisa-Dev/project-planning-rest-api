@@ -26,7 +26,7 @@ const getAllSprints = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-};
+}; 
 
 const getSprintById = async (req, res, next) => {
   const { projectId, sprintId } = req.params;
