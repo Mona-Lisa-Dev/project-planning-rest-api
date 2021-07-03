@@ -4,9 +4,9 @@ const { HttpCode } = require('../helpers/constants');
 
 const schemaCreateTask = Joi.object({
   name: Joi.string().required(),
-  scheduledHours: Joi.number().required(),
-  spentHours: Joi.number().optional(),
-  isDone: Joi.boolean().optional(),
+  scheduledTime: Joi.number().required(),
+  totalTime: Joi.number().optional(),
+  // isDone: Joi.boolean().optional(),
 });
 
 const validate = async (schema, body, next) => {

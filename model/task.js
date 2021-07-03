@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { Schema, SchemaTypes } = mongoose;
+const dayjs = require('dayjs');
 
 const taskSchema = new Schema(
   {
@@ -8,39 +9,46 @@ const taskSchema = new Schema(
       required: true,
     },
 
-    scheduledHours: {
+    scheduledTime: {
       type: Number,
       required: true,
     },
-    // if needed, may be deleted
-    isDone: {
-      type: Boolean,
-      default: false,
-    },
 
-    allHoursTask: {
+    // if needed, may be deleted
+    // isDone: {
+    //   type: Boolean,
+    //   default: false,
+    // },
+
+    totalTime: {
       type: Number,
       default: 0,
     },
+
+    startDate: {
+      type: Date,
+      default: 0,
+    }, // не отдается на фронт, нужен для расчета дней
 
     durationSprint: {
       type: Number,
       default: 0,
-    },
+    }, // не отдается на фронт, нужен для расчета дней
 
-    hoursSpent: {
+    taskByDays: {
       type: Array,
       default: function () {
-        return new Array(this.durationSprint).fill(0);
-      },
-    },
+        const arr = new Array(this.durationSprint).fill();
 
-    taskForDays: {
-      type: Array,
-      default: function () {
-        return new Array(this.durationSprint).fill({
-          date: new Date(),
-          hoursSpent: 0,
+        const day = (startDate, durationSprint, i) =>
+          dayjs(startDate)
+            .add(durationSprint + i, 'day')
+            .format('YYYY-MM-DD');
+
+        return arr.map((_, i) => {
+          return {
+            [day(this.startDate, this.durationSprint, i)]: 0,
+          };
         });
       },
     },
@@ -58,6 +66,22 @@ const taskSchema = new Schema(
   {
     versionKey: false,
     timestamps: true,
+    toObject: {
+      virtuals: true,
+      // transform: function (_doc, ret) {
+      //   delete ret._id;
+      //   return ret;
+      // },
+    },
+    toJSON: {
+      virtuals: true,
+      transform: function (_doc, ret) {
+        delete ret._id;
+        delete ret.startDate;
+        delete ret.durationSprint;
+        return ret;
+      },
+    },
   },
 );
 
