@@ -23,7 +23,7 @@ const projectSchema = new Schema(
       virtuals: true,
       // transform: function (_doc, ret) {
       //   delete ret._id;
-      //   retur ret;
+      //   retu ret;
       // },
     },
     toJSON: {

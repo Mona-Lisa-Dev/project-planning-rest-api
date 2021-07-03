@@ -17,7 +17,7 @@ const createProject = async (req, res, next) => {
   const userId = req.user.id;
   try {
     const project = await Projects.addProject({ ...req.body, owner: userId });
-    // console.log(pro); // toObject
+    // console.log(project); // toObject
     return res
       .status(HttpCode.CREATED)
       .json({ status: 'success', code: HttpCode.CREATED, data: { project } });
