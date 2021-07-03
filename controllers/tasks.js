@@ -52,6 +52,7 @@ const getTaskById = async (req, res, next) => {
 
 const updateTask = async (req, res, next) => {
   const { sprintId, taskId, day, value } = req.params;
+
   try {
     const findTask = await Tasks.getTaskById(sprintId, taskId);
     if (!findTask) {
@@ -61,6 +62,20 @@ const updateTask = async (req, res, next) => {
         message: 'Task is not found',
       });
     }
+    const projectId = findTask.project;
+    const findSprint = await Sprints.getById(projectId, sprintId);
+
+    const currentTotalDaly = findSprint.totalDaly;
+
+    const updTotalDaly = currentTotalDaly.map(el =>
+      Object.keys(el)[0] === day
+        ? { [Object.keys(el)[0]]: Object.values(el)[0] + parseInt(value) }
+        : el,
+    );
+
+    Sprints.updateSprint(projectId, sprintId, {
+      totalDaly: updTotalDaly,
+    });
 
     const taskByDaysUpd = findTask.taskByDays.map(el =>
       Object.keys(el)[0] === day

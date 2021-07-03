@@ -35,10 +35,21 @@ const sprintSchema = new Schema(
       default: 0,
     },
 
-    // totalDaly: {
-    //   type: Number,
-    //   default: [],
-    // },
+    totalDaly: {
+      type: Array,
+      default: function () {
+        const arr = new Array(this.duration).fill();
+
+        const taskDay = (startDate, i) =>
+          dayjs(startDate).add(i, 'day').format('YYYY-MM-DD');
+
+        return arr.map((_, i) => {
+          return {
+            [taskDay(this.startDate, i)]: 0,
+          };
+        });
+      },
+    },
 
     project: {
       type: SchemaTypes.ObjectId,
