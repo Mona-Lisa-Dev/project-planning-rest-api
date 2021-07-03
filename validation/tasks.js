@@ -50,18 +50,38 @@ const validateId = async (projectId, sprintId, taskId, next) => {
   next();
 };
 
+module.exports.validateUpdTask = async (req, _res, next) => {
+  const isNormalInteger = value => /^\+?(0|[1-9]\d*)$/.test(value);
+
+  const isValidDate = value =>
+    /([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/.test(value);
+
+  const { day, value } = req.params;
+
+  !isValidDate(day) &&
+    next({
+      status: HttpCode.BAD_REQUEST,
+      message: `day should be YYYY-MM-DD`,
+    });
+
+  !isNormalInteger(value) &&
+    next({
+      status: HttpCode.BAD_REQUEST,
+      message: `value must be number`,
+    });
+
+  next();
+};
+
 module.exports.validateCreateTask = (req, _res, next) => {
   return validate(schemaCreateTask, req.body, next);
 };
 
-module.exports.validateObjectIdProjectSprint = (req, _res, next) => {
-  return validateId(req.params.projectId, req.params.sprintId, null, next);
-};
-
-module.exports.validateObjectIdSprint = (req, _res, next) => {
-  return validateId(null, req.params.sprintId, null, next);
-};
-
-module.exports.validateObjectIdSprintTask = (req, _res, next) => {
-  return validateId(null, req.params.sprintId, req.params.taskId, next);
+module.exports.validateObjectId = (req, _res, next) => {
+  return validateId(
+    req.params.sprintId,
+    req.params.sprintId,
+    req.params.taskId,
+    next,
+  );
 };

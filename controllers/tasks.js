@@ -4,8 +4,16 @@ const { HttpCode } = require('../helpers/constants');
 
 const createTask = async (req, res, next) => {
   const { projectId, sprintId } = req.params;
+  const incomingScheduledTime = parseInt(req.body.scheduledTime);
 
-  const sprint = await Sprints.getById(projectId, sprintId);
+  const findSprint = await Sprints.getById(projectId, sprintId);
+
+  const currentScheduledTime = findSprint.allScheduledTime;
+
+  const sprint = await Sprints.updateSprint(projectId, sprintId, {
+    allScheduledTime: incomingScheduledTime + currentScheduledTime,
+  });
+
   try {
     const task = await Tasks.createTask({
       ...req.body,
@@ -14,6 +22,7 @@ const createTask = async (req, res, next) => {
       durationSprint: sprint.duration,
       startDate: sprint.startDate,
     });
+
     return res
       .status(HttpCode.CREATED)
       .json({ status: 'success', code: HttpCode.CREATED, data: { task } });
@@ -43,6 +52,7 @@ const getTaskById = async (req, res, next) => {
 
 const updateTask = async (req, res, next) => {
   const { sprintId, taskId, day, value } = req.params;
+
   try {
     const findTask = await Tasks.getTaskById(sprintId, taskId);
     if (!findTask) {
@@ -52,6 +62,20 @@ const updateTask = async (req, res, next) => {
         message: 'Task is not found',
       });
     }
+    const projectId = findTask.project;
+    const findSprint = await Sprints.getById(projectId, sprintId);
+
+    const currentTotalDaly = findSprint.totalDaly;
+
+    const updTotalDaly = currentTotalDaly.map(el =>
+      Object.keys(el)[0] === day
+        ? { [Object.keys(el)[0]]: Object.values(el)[0] + parseInt(value) }
+        : el,
+    );
+
+    Sprints.updateSprint(projectId, sprintId, {
+      totalDaly: updTotalDaly,
+    });
 
     const taskByDaysUpd = findTask.taskByDays.map(el =>
       Object.keys(el)[0] === day
