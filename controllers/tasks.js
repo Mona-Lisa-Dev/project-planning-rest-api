@@ -60,7 +60,10 @@ const updateTask = async (req, res, next) => {
     );
 
     const totalTime = await findTask.taskByDays.reduce(
-      (acc, value) => acc + Object.values(value)[0],
+      (acc, el) =>
+        Object.keys(el)[0] === day
+          ? acc + parseInt(value)
+          : acc + Object.values(el)[0],
       0,
     );
 
@@ -103,7 +106,6 @@ const getAllTasks = async (req, res, next) => {
 
 const deleteTask = async (req, res, next) => {
   const { sprintId, taskId } = req.params;
-  // console.log(sprintId);
   try {
     const task = await Tasks.removeTask(sprintId, taskId);
     if (task) {

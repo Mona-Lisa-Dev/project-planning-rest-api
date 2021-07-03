@@ -26,20 +26,6 @@ const updateTask = async (sprintId, taskId, taskByDays, totalTime) => {
   return result;
 };
 
-// const updateTotalTask = async (sprintId, taskId, total) => {
-//   const result = await Task.findOneAndUpdate(
-//     {
-//       _id: taskId,
-//       sprint: sprintId,
-//     },
-//     {
-//       allHoursTask: total,
-//     },
-//     { new: true },
-//   );
-//   return result;
-// };
-
 const allTasks = async sprintId => {
   return await Task.find({ sprint: sprintId });
 };
@@ -54,5 +40,5 @@ module.exports = {
   updateTask,
   allTasks,
   removeTask,
-  // updateTotalTask,
+  // updateTotalTime,
 };
