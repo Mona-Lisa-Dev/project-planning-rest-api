@@ -392,7 +392,7 @@
           }
         }
       },
-      "delete": {
+      "post": {
         "tags": ["Projects"],
         "summary": "Remove participant",
         "security": [{ "Bearer": [] }],
@@ -430,13 +430,12 @@
             "content": {}
           }
         }
-      }
-    },
+      },
 
-    "/api/projects/{projectId}": {
       "get": {
         "tags": ["Projects"],
-        "summary": "Get project by id",
+        "summary": "Get all participants",
+        "security": [{ "Bearer": [] }],
         "parameters": [
           {
             "in": "path",
@@ -446,7 +445,44 @@
             "type": "string"
           }
         ],
+        "responses": {
+          "200": {
+            "description": "Project partisipants",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPartisipantsResponse"
+                }
+              }
+            }
+          },
+
+          "401": {
+            "description": "Authorization token is missing",
+            "content": {}
+          },
+          "404": {
+            "description": "Participants are not found",
+            "content": {}
+          }
+        }
+      }
+    },
+
+    "/api/projects/{projectId}": {
+      "get": {
+        "tags": ["Projects"],
+        "summary": "Get project by id",
         "security": [{ "Bearer": [] }],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "description": "Project id",
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Project found",
@@ -492,6 +528,215 @@
           },
           "404": {
             "description": "Project is not found",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/api/sprints/{projectId}": {
+      "post": {
+        "tags": ["Sprints"],
+        "summary": "Creating sprint",
+        "security": [{ "Bearer": [] }],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "description": "Project id",
+            "type": "string"
+          }
+        ],
+        "requestBody": {
+          "description": "Creating sprint object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSprintRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Sprint created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SprintCreatedResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Project id is not valid",
+            "content": {}
+          },
+          "401": {
+            "description": "Authorization token is missing",
+            "content": {}
+          }
+        }
+      },
+
+      "get": {
+        "tags": ["Sprints"],
+        "summary": "Get all sprints",
+        "security": [{ "Bearer": [] }],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "description": "Project id",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetSprintsResponce"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization token is missing",
+            "content": {}
+          }
+        }
+      }
+    },
+
+    "/api/sprints/{projectId}/name": {
+      "patch": {
+        "tags": ["Sprints"],
+        "summary": "Update sprint title",
+        "security": [{ "Bearer": [] }],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "description": "Project id",
+            "type": "string"
+          }
+        ],
+
+        "requestBody": {
+          "description": "Updating sprint title",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdSprintNameRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sprint updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SprintCreatedResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization token is missing",
+            "content": {}
+          },
+          "400": {
+            "description": "Missing field Name",
+            "content": {}
+          },
+          "404": {
+            "description": "Sprint is not found",
+            "content": {}
+          }
+        }
+      }
+    },
+
+    "/api/sprints/{projectId}/{sprintId}": {
+      "get": {
+        "tags": ["Sprints"],
+        "summary": "Get sprint by id",
+        "security": [{ "Bearer": [] }],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "description": "Project id",
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "sprintId",
+            "required": true,
+            "description": "Sprint id",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sprint found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SprintCreatedResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization token is missing",
+            "content": {}
+          },
+          "404": {
+            "description": "Sprint is not found",
+            "content": {}
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Sprints"],
+        "summary": "Delete sprint",
+        "security": [{ "Bearer": [] }],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "description": "Project id",
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "sprintId",
+            "required": true,
+            "description": "Sprint id",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sprint is deleted",
+            "content": {}
+          },
+          "401": {
+            "description": "Authorization token is missing",
+            "content": {}
+          },
+          "404": {
+            "description": "Sprint is not found",
             "content": {}
           }
         }
@@ -599,6 +844,40 @@
             "type": "string",
             "description": "User's email",
             "format": "email"
+          }
+        }
+      },
+
+      "CreateSprintRequest": {
+        "type": "object",
+        "required": ["name", "start date", "duration"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Sprint title",
+            "example": "Sprint 1"
+          },
+          "startDate": {
+            "type": "date",
+            "description": "Date of creation",
+            "example": "2021-07-02"
+          },
+          "duration": {
+            "type": "number",
+            "description": "Sprint duration in days",
+            "example": "4"
+          }
+        }
+      },
+
+      "UpdSprintNameRequest": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Sprint title",
+            "example": "Changed sprint title"
           }
         }
       },
@@ -946,6 +1225,120 @@
           },
           "project": {
             "$ref": "#/components/schemas/ProjectCreatedResponse"
+          }
+        }
+      },
+      "GetPartisipantsResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "success"
+          },
+          "participants": {
+            "type": "array",
+            "description": "Project's participants' emails",
+            "example": "[lisa@mail.com, jack@example.com, jason@work.com]"
+          }
+        }
+      },
+      "SprintCreatedResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "success"
+          },
+          "sprint": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Project's id",
+                "example": "507f1f77bcf86cd799439012"
+              },
+              "name": {
+                "type": "string",
+                "description": "Sprint title",
+                "example": "Sprint1"
+              },
+              "startDate": {
+                "type": "date",
+                "description": "Date of creation",
+                "example": "2021-07-02"
+              },
+              "duration": {
+                "type": "number",
+                "description": "Sprint duration in days",
+                "example": "4"
+              },
+              "endDate": {
+                "type": "date",
+                "description": "End of the sprint",
+                "example": "2021-11-02"
+              },
+              "createdAt": {
+                "type": "date",
+                "description": "date of creation",
+                "example": "2021-07-03T11:59:55.633Z"
+              },
+              "updatedAt": {
+                "type": "date",
+                "description": "date of update",
+                "example": "2021-07-03T11:59:55.633Z"
+              },
+              "project": {
+                "type": "string",
+                "description": "Project id",
+                "example": "507f1f77bcf86cd799439012"
+              }
+            }
+          }
+        }
+      },
+
+      "GetSprintsResponce": {
+        "type": "array",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "success"
+          }
+        },
+        "description": "Array of user's sprints in one project",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Project's id",
+              "example": "507f1f77bcf86cd799439012"
+            },
+            "name": {
+              "type": "string",
+              "description": "Sprint title",
+              "example": "Sprint1"
+            },
+            "startDate": {
+              "type": "date",
+              "description": "Date of creation",
+              "example": "2021-07-02"
+            },
+            "duration": {
+              "type": "number",
+              "description": "Sprint duration in days",
+              "example": "4"
+            },
+            "endDate": {
+              "type": "date",
+              "description": "End of the sprint",
+              "example": "2021-07-06"
+            },
+            "project": {
+              "type": "string",
+              "description": "Project id",
+              "example": "507f1f77bcf86cd799439012"
+            }
           }
         }
       }

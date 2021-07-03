@@ -18,7 +18,7 @@ router.post(
   ctrl.createSprint,
 );
 
-router.get('/:projectId', guard, validateObjectId, ctrl.getAllSprints);
+router.get('/:projectId', guard, validateObjectId, ctrl.getAllSprints); //
 
 router.patch(
   '/:projectId/:sprintId/name',
