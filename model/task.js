@@ -14,7 +14,6 @@ const taskSchema = new Schema(
       required: true,
     },
 
-    // if needed, may be deleted
     // isDone: {
     //   type: Boolean,
     //   default: false,
@@ -23,7 +22,7 @@ const taskSchema = new Schema(
     totalTime: {
       type: Number,
       default: 0,
-    },
+    }, //  TODO: heed to count
 
     startDate: {
       type: Date,
@@ -40,14 +39,12 @@ const taskSchema = new Schema(
       default: function () {
         const arr = new Array(this.durationSprint).fill();
 
-        const day = (startDate, durationSprint, i) =>
-          dayjs(startDate)
-            .add(durationSprint + i, 'day')
-            .format('YYYY-MM-DD');
+        const taskDay = (startDate, durationSprint, i) =>
+          dayjs(startDate).add(i, 'day').format('YYYY-MM-DD');
 
         return arr.map((_, i) => {
           return {
-            [day(this.startDate, this.durationSprint, i)]: 0,
+            [taskDay(this.startDate, this.durationSprint, i)]: 0,
           };
         });
       },
