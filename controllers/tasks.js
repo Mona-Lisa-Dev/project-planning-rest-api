@@ -6,13 +6,14 @@ const createTask = async (req, res, next) => {
   const { projectId, sprintId } = req.params;
 
   const sprint = await Sprints.getById(projectId, sprintId);
-
+  // console.log(sprint.duration);
   try {
     const task = await Tasks.createTask({
       ...req.body,
       sprint: sprintId,
       project: projectId,
       durationSprint: sprint.duration,
+      startDate: sprint.startDate,
     });
     return res
       .status(HttpCode.CREATED)
