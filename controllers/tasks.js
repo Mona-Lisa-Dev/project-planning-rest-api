@@ -6,7 +6,6 @@ const createTask = async (req, res, next) => {
   const { projectId, sprintId } = req.params;
 
   const sprint = await Sprints.getById(projectId, sprintId);
-  // console.log(sprint.duration);
   try {
     const task = await Tasks.createTask({
       ...req.body,
@@ -53,40 +52,33 @@ const updateTask = async (req, res, next) => {
         message: 'Task is not found',
       });
     }
-    const taskForDaysArray = findTask.taskForDays.map((el, i) => {
-      if (i === Number(day) - 1) {
-        el.hoursSpent = Number(value);
-        return el;
-      }
-      return el;
-    });
 
-    const spendHoursArray = findTask.hoursSpent.map((el, i) =>
-      i === Number(day) - 1 ? Number(value) : el,
+    const taskByDaysUpd = findTask.taskByDays.map(el =>
+      Object.keys(el)[0] === day
+        ? { [Object.keys(el)[0]]: parseInt(value) }
+        : el,
+    );
+
+    const totalTime = await findTask.taskByDays.reduce(
+      (acc, el) =>
+        Object.keys(el)[0] === day
+          ? acc + parseInt(value)
+          : acc + Object.values(el)[0],
+      0,
     );
 
     const task = await Tasks.updateTask(
       sprintId,
       taskId,
-      spendHoursArray,
-      taskForDaysArray,
+      taskByDaysUpd,
+      totalTime,
     );
 
-    const totalHours = task.hoursSpent.reduce((sum, current) => {
-      return sum + current;
-    }, 0);
-
-    const taskTotalHours = await Tasks.updateTotalTask(
-      sprintId,
-      taskId,
-      totalHours,
-    );
-
-    if (taskTotalHours) {
+    if (task) {
       return res.status(HttpCode.OK).json({
         status: 'success',
         code: HttpCode.OK,
-        data: { taskTotalHours },
+        data: { task },
       });
     }
 
@@ -114,7 +106,6 @@ const getAllTasks = async (req, res, next) => {
 
 const deleteTask = async (req, res, next) => {
   const { sprintId, taskId } = req.params;
-  // console.log(sprintId);
   try {
     const task = await Tasks.removeTask(sprintId, taskId);
     if (task) {
