@@ -80,7 +80,7 @@ const updateProjectName = async (req, res, next) => {
         message: 'Missing field Name!',
       });
     }
-    const project = await Projects.update(userId, projectId, req.body);
+    const project = await Projects.updateProject(userId, projectId, req.body);
     if (project) {
       return res
         .status(HttpCode.OK)
@@ -108,7 +108,7 @@ const updateProjectDescription = async (req, res, next) => {
         message: 'Missing field Description!',
       });
     }
-    const project = await Projects.update(userId, projectId, req.body);
+    const project = await Projects.updateProject(userId, projectId, req.body);
     if (project) {
       return res
         .status(HttpCode.OK)

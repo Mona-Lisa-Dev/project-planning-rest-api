@@ -79,7 +79,7 @@ module.exports.validateCreateTask = (req, _res, next) => {
 
 module.exports.validateObjectId = (req, _res, next) => {
   return validateId(
-    req.params.sprintId,
+    req.params.projectId,
     req.params.sprintId,
     req.params.taskId,
     next,

@@ -67,14 +67,14 @@ const updateTask = async (req, res, next) => {
 
     const currentTotalDaly = findSprint.totalDaly;
 
-    const updTotalDaly = currentTotalDaly.map(el =>
+    const updatedTotalDaly = currentTotalDaly.map(el =>
       Object.keys(el)[0] === day
         ? { [Object.keys(el)[0]]: Object.values(el)[0] + parseInt(value) }
         : el,
     );
 
     Sprints.updateSprint(projectId, sprintId, {
-      totalDaly: updTotalDaly,
+      totalDaly: updatedTotalDaly,
     });
 
     const taskByDaysUpd = findTask.taskByDays.map(el =>
