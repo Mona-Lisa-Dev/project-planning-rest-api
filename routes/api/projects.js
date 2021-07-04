@@ -17,34 +17,34 @@ router.delete('/:projectId', guard, valid.validateObjectId, ctrl.deleteProject);
 router.patch(
   '/:projectId/name',
   guard,
-  valid.validateNameProject,
   valid.validateObjectId,
+  valid.validateNameProject,
   ctrl.updateProjectName,
 );
 
 router.patch(
   '/:projectId/description',
   guard,
-  valid.validateDescriptionProject,
   valid.validateObjectId,
+  valid.validateDescriptionProject,
   ctrl.updateProjectDescription,
 );
 
 router.patch(
   '/:projectId/participant',
   guard,
-  valid.validateEmail,
   valid.validateObjectId,
+  valid.validateEmail,
   ctrl.addParticipant,
 );
 
 router.post(
   '/:projectId/participant',
   guard,
-  valid.validateEmail,
   valid.validateObjectId,
+  valid.validateEmail,
   ctrl.deleteParticipant,
-);
+); // почему post?
 
 router.get(
   '/:projectId/participant',

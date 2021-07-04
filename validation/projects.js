@@ -35,15 +35,14 @@ const validate = async (schema, body, next) => {
   }
 };
 
-const validateId = async (id, next) => {
-  if (await mongoose.isValidObjectId(id)) {
-    next();
-    return;
-  }
-  next({
-    status: HttpCode.BAD_REQUEST,
-    message: `Id is not valid`,
-  });
+const validateId = async (projectId, next) => {
+  !mongoose.isValidObjectId(projectId) &&
+    next({
+      status: HttpCode.BAD_REQUEST,
+      message: `Project Id is not valid`,
+    });
+
+  next();
 };
 
 module.exports.validateCreateProject = (req, _res, next) => {
