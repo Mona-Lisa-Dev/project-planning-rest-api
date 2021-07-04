@@ -26,11 +26,6 @@ const validate = async (schema, body, next) => {
 };
 
 const validateId = async (projectId, sprintId, taskId, next) => {
-  console.log('projectId', projectId);
-
-  console.log(mongoose.isValidObjectId(projectId));
-  // console.log('sprintId', sprintId);
-  // console.log('taskId', taskId);
   projectId &&
     !mongoose.isValidObjectId(projectId) &&
     next({
@@ -84,7 +79,7 @@ module.exports.validateCreateTask = (req, _res, next) => {
 
 module.exports.validateObjectId = (req, _res, next) => {
   return validateId(
-    req.params.sprintId,
+    req.params.projectId,
     req.params.sprintId,
     req.params.taskId,
     next,
