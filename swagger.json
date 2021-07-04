@@ -741,6 +741,61 @@
           }
         }
       }
+    },
+
+    "/api/tasks/{projectId}/{sprintId}": {
+      "post": {
+        "tags": ["Tasks"],
+        "summary": "Creating task",
+        "security": [{ "Bearer": [] }],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "description": "Project id",
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "sprintId",
+            "required": true,
+            "description": "Sprint id",
+            "type": "string"
+          }
+        ],
+        "requestBody": {
+          "description": "Creating task object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSprintRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Sprint created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SprintCreatedResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Project id is not valid",
+            "content": {}
+          },
+          "401": {
+            "description": "Authorization token is missing",
+            "content": {}
+          }
+        }
+      }
     }
   },
 

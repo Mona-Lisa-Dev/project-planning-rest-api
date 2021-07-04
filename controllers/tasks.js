@@ -52,7 +52,7 @@ const updateTask = async (req, res, next) => {
         code: HttpCode.NOT_FOUND,
         message: 'Task is not found',
       });
-    }
+    } //
     const taskForDaysArray = findTask.taskForDays.map((el, i) => {
       if (i === Number(day) - 1) {
         el.hoursSpent = Number(value);
