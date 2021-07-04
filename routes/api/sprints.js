@@ -3,7 +3,14 @@ const router = express.Router();
 
 const guard = require('../../helpers/guard');
 
-const ctrl = require('../../controllers/sprints');
+const {
+  createSprint,
+  getAllSprints,
+  updateSprint,
+  deleteSprint,
+  getSprintById,
+} = require('../../controllers/sprints');
+
 const {
   validateCreateSprint,
   validateUpdateSprint,
@@ -15,31 +22,23 @@ router.post(
   guard,
   validateObjectId,
   validateCreateSprint,
-  ctrl.createSprint,
+  createSprint,
 );
 
-router.get('/:projectId', guard, validateObjectId, ctrl.getAllSprints); //
+
+router.get('/:projectId', guard, validateObjectId, getAllSprints);
+
 
 router.patch(
   '/:projectId/:sprintId/name',
   validateObjectId,
   validateUpdateSprint,
   guard,
-  ctrl.updateSprint,
+  updateSprint,
 );
 
-router.delete(
-  '/:projectId/:sprintId',
-  guard,
-  validateObjectId,
-  ctrl.deleteSprint,
-);
+router.delete('/:projectId/:sprintId', guard, validateObjectId, deleteSprint);
 
-router.get(
-  '/:projectId/:sprintId',
-  guard,
-  validateObjectId,
-  ctrl.getSprintById,
-);
+router.get('/:projectId/:sprintId', guard, validateObjectId, getSprintById);
 
 module.exports = router;

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const guard = require('../../helpers/guard');
+
 const {
   createTask,
   updateTask,
@@ -10,37 +11,32 @@ const {
   getTaskById,
 } = require('../../controllers/tasks');
 
-const valid = require('../../validation/tasks');
+const {
+  validateCreateTask,
+  validateObjectId,
+  validateUpdTask,
+} = require('../../validation/tasks');
 
 router.post(
   '/:projectId/:sprintId',
   guard,
-  valid.validateObjectIdProjectSprint,
-  valid.validateCreateTask,
+  validateObjectId,
+  validateCreateTask,
   createTask,
 ); //
 
 router.patch(
   '/:sprintId/:taskId/day=:day/value=:value',
   guard,
-  valid.validateObjectIdSprintTask,
+  validateObjectId,
+  validateUpdTask,
   updateTask,
 );
 
-router.get(
-  '/:sprintId/:taskId',
-  guard,
-  valid.validateObjectIdSprintTask,
-  getTaskById,
-);
+router.get('/:sprintId/:taskId', guard, validateObjectId, getTaskById);
 
-router.get('/:sprintId', guard, valid.validateObjectIdSprint, getAllTasks);
+router.get('/:sprintId', guard, validateObjectId, getAllTasks);
 
-router.delete(
-  '/:sprintId/:taskId',
-  guard,
-  valid.validateObjectIdSprintTask,
-  deleteTask,
-);
+router.delete('/:sprintId/:taskId', guard, validateObjectId, deleteTask);
 
 module.exports = router;
