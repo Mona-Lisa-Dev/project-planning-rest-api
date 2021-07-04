@@ -46,11 +46,13 @@ router.post(
   ctrl.deleteParticipant,
 ); // почему post?
 
-router.get(
-  '/:projectId/participant',
-  guard,
-  valid.validateObjectId,
-  ctrl.getParticipants,
-);
+
+// router.get(
+//   '/:projectId/participant',
+//   guard,
+//   validateObjectId,
+//   ctrl.getParticipants,
+// );
+
 
 module.exports = router;

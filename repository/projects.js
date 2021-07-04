@@ -17,10 +17,10 @@ const listProjects = async user => {
   return results;
 };
 
-const getById = async (userId, projectId) => {
+const getById = async (user, projectId) => {
   const result = await Project.findOne({
     _id: projectId,
-    owner: userId,
+    $or: [{ owner: user.id }, { participants: user.email }],
   }).populate({ path: 'owner', select: 'name email _id' }); // .populate({}) позволяет показывать не просто id пользователя, а ту информацию,кот.указываем в select, "-"-убирает ненужные поля
   return result;
 };
