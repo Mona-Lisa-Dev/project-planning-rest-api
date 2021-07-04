@@ -27,10 +27,11 @@ const createProject = async (req, res, next) => {
 };
 
 const getProjectById = async (req, res, next) => {
-  const userId = req.user.id;
+  // const userId = req.user.id;
+  const user = req.user;
   const projectId = req.params.projectId;
   try {
-    const project = await Projects.getById(userId, projectId);
+    const project = await Projects.getById(user, projectId);
     // console.log(project); // toObject
     if (project) {
       return res
@@ -184,26 +185,26 @@ const deleteParticipant = async (req, res, next) => {
   }
 };
 
-const getParticipants = async (req, res, next) => {
-  const userId = req.user.id;
-  const { projectId } = req.params;
-  try {
-    const project = await Projects.getById(userId, projectId);
-    const { participants } = project;
-    if (project) {
-      return res
-        .status(HttpCode.OK)
-        .json({ status: 'success', code: HttpCode.OK, data: { participants } }); // toJSON
-    }
-    return res.status(HttpCode.NOT_FOUND).json({
-      status: 'error',
-      code: HttpCode.NOT_FOUND,
-      message: 'Not found',
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+// const getParticipants = async (req, res, next) => {
+//   const userId = req.user.id;
+//   const { projectId } = req.params;
+//   try {
+//     const project = await Projects.getById(userId, projectId);
+//     const { participants } = project;
+//     if (project) {
+//       return res
+//         .status(HttpCode.OK)
+//         .json({ status: 'success', code: HttpCode.OK, data: { participants } }); // toJSON
+//     }
+//     return res.status(HttpCode.NOT_FOUND).json({
+//       status: 'error',
+//       code: HttpCode.NOT_FOUND,
+//       message: 'Not found',
+//     });
+//   } catch (error) {
+//     next(error);
+//   }
+// };
 
 module.exports = {
   getAllProjects,
@@ -214,5 +215,5 @@ module.exports = {
   addParticipant,
   deleteParticipant,
   updateProjectDescription,
-  getParticipants,
+  // getParticipants,
 };
