@@ -1,62 +1,55 @@
 const express = require('express');
 const router = express.Router();
-
 const guard = require('../../helpers/guard');
 
-const {
-  validateCreateProject,
-  validateObjectId,
-  validateNameProject,
-  validateEmail,
-  validateDescriptionProject,
-} = require('../../validation/projects');
+const valid = require('../../validation/projects');
 
 const ctrl = require('../../controllers/projects');
 
 router.get('/', guard, ctrl.getAllProjects);
 
-router.get('/:projectId', guard, validateObjectId, ctrl.getProjectById);
+router.get('/:projectId', guard, valid.validateObjectId, ctrl.getProjectById);
 
-router.post('/', guard, validateCreateProject, ctrl.createProject);
+router.post('/', guard, valid.validateCreateProject, ctrl.createProject);
 
-router.delete('/:projectId', guard, validateObjectId, ctrl.deleteProject);
+router.delete('/:projectId', guard, valid.validateObjectId, ctrl.deleteProject);
 
 router.patch(
   '/:projectId/name',
   guard,
-  validateNameProject,
-  validateObjectId,
+  valid.validateNameProject,
+  valid.validateObjectId,
   ctrl.updateProjectName,
 );
 
 router.patch(
   '/:projectId/description',
   guard,
-  validateDescriptionProject,
-  validateObjectId,
+  valid.validateDescriptionProject,
+  valid.validateObjectId,
   ctrl.updateProjectDescription,
 );
 
 router.patch(
   '/:projectId/participant',
   guard,
-  validateEmail,
-  validateObjectId,
+  valid.validateEmail,
+  valid.validateObjectId,
   ctrl.addParticipant,
 );
 
 router.post(
   '/:projectId/participant',
   guard,
-  validateEmail,
-  validateObjectId,
+  valid.validateEmail,
+  valid.validateObjectId,
   ctrl.deleteParticipant,
 );
 
 router.get(
   '/:projectId/participant',
   guard,
-  validateObjectId,
+  valid.validateObjectId,
   ctrl.getParticipants,
 );
 
