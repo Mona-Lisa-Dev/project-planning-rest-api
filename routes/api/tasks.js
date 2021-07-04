@@ -31,12 +31,12 @@ router.patch(
   validateObjectId,
   validateUpdTask,
   updateTask,
-);
+); /// +-
 
 router.get('/:sprintId/:taskId', guard, validateObjectId, getTaskById);
 
-router.get('/:sprintId', guard, validateObjectId, getAllTasks);
+router.get('/:sprintId', guard, validateObjectId, getAllTasks); //
 
-router.delete('/:sprintId/:taskId', guard, validateObjectId, deleteTask);
+router.delete('/:sprintId/:taskId', guard, validateObjectId, deleteTask); //
 
 module.exports = router;
