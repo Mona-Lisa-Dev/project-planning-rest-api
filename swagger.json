@@ -430,42 +430,6 @@
             "content": {}
           }
         }
-      },
-
-      "get": {
-        "tags": ["Projects"],
-        "summary": "Get all participants",
-        "security": [{ "Bearer": [] }],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "projectId",
-            "required": true,
-            "description": "Project id",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Project partisipants",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetPartisipantsResponse"
-                }
-              }
-            }
-          },
-
-          "401": {
-            "description": "Authorization token is missing",
-            "content": {}
-          },
-          "404": {
-            "description": "Participants are not found",
-            "content": {}
-          }
-        }
       }
     },
 
@@ -742,42 +706,6 @@
         }
       }
     },
-    "/api/tasks/{sprintId}": {
-      "get": {
-        "tags": ["Tasks"],
-        "summary": "Get all tasks of the sprint",
-        "security": [{ "Bearer": [] }],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "sprintId",
-            "required": true,
-            "description": "Sprint id",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Sprints found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetTasksResponce"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Authorization token is missing",
-            "content": {}
-          },
-          "404": {
-            "description": "Tasks are not found",
-            "content": {}
-          }
-        }
-      }
-    },
 
     "/api/tasks/{projectId}/{sprintId}": {
       "post": {
@@ -886,6 +814,43 @@
           },
           "401": {
             "description": "Authorization token is missing",
+            "content": {}
+          }
+        }
+      }
+    },
+
+    "/api/tasks/{sprintId}": {
+      "get": {
+        "tags": ["Tasks"],
+        "summary": "Get all tasks of the sprint",
+        "security": [{ "Bearer": [] }],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "sprintId",
+            "required": true,
+            "description": "Sprint id",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sprints found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetTasksResponce"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization token is missing",
+            "content": {}
+          },
+          "404": {
+            "description": "Tasks are not found",
             "content": {}
           }
         }
@@ -1060,6 +1025,21 @@
             "type": "string",
             "description": "Project's description",
             "example": "Updated description"
+          }
+        }
+      },
+      "GetProjByIDRequest": {
+        "type": "object",
+        "properties": {
+          "owner._id": {
+            "type": "string",
+            "description": "Owner's Id",
+            "example": "507f1f77bcf86cd799439012"
+          },
+          "participant": {
+            "type": "string",
+            "description": "participant's email",
+            "format": "email"
           }
         }
       },
