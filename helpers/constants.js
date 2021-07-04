@@ -12,7 +12,7 @@ const HttpCode = {
 
 const Limit = {
   MAX_JSON: 15000,
-  MAX_REQUEST_EACH_IP: 100,
+  MAX_REQUEST_EACH_IP: 1000,
   TIME_15_MINUT: 15 * 60 * 1000,
 };
 
