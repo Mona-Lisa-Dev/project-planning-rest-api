@@ -41,7 +41,7 @@ const removeProject = async (userId, projectId) => {
   return result;
 };
 
-const update = async (userId, projectId, body) => {
+const updateProject = async (userId, projectId, body) => {
   const result = await Project.findOneAndUpdate(
     {
       _id: projectId,
@@ -96,7 +96,7 @@ module.exports = {
   listProjects,
   getById,
   removeProject,
-  update,
+  updateProject,
   updateParticipants,
   removeParticipant,
 };
