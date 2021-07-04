@@ -5,13 +5,19 @@ const { HttpCode } = require('../helpers/constants');
 const createTask = async (req, res, next) => {
   const { projectId, sprintId } = req.params;
   const incomingScheduledTime = parseInt(req.body.scheduledTime);
-
   const findSprint = await Sprints.getById(projectId, sprintId);
 
-  const currentScheduledTime = findSprint.allScheduledTime;
+  if (!findSprint) {
+    return res.status(HttpCode.NOT_FOUND).json({
+      status: 'error',
+      code: HttpCode.NOT_FOUND,
+      message: 'Not found',
+    });
+  }
 
+  const currentScheduledTime = findSprint.allScheduledTime;
   const sprint = await Sprints.updateSprint(projectId, sprintId, {
-    allScheduledTime: incomingScheduledTime + currentScheduledTime,
+    allScheduledTime: incomingScheduledTime + currentScheduledTime || 0,
   });
 
   try {
@@ -55,6 +61,7 @@ const updateTask = async (req, res, next) => {
 
   try {
     const findTask = await Tasks.getTaskById(sprintId, taskId);
+
     if (!findTask) {
       return res.status(HttpCode.NOT_FOUND).json({
         status: 'error',
