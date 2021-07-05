@@ -71,18 +71,29 @@ const updateTask = async (req, res, next) => {
   try {
     const findSprint = await Sprints.getById(projectId, sprintId);
 
-    const updatedSprintDays = findSprint.days.map(el =>
-      el.date === day
-        ? {
-            ...el,
-            tasks: el.tasks.map(el =>
-              el.id === taskId ? { ...el, spenHours: parseInt(value) } : el,
-            ),
-          }
-        : el,
-    );
+    const updatedSprintDays = findSprint.days
+      .map(el =>
+        el.date === day
+          ? {
+              ...el,
+              tasks: el.tasks.map(el =>
+                el.id === taskId ? { ...el, spenHours: parseInt(value) } : el,
+              ),
+            }
+          : el,
+      )
+      .map(el => {
+        return {
+          ...el,
+          tasks: el.tasks.map(task =>
+            task.id === taskId
+              ? { ...task, totalTime: task.totalTime + parseInt(value) }
+              : task,
+          ),
+        };
+      });
 
-    // console.log(updatedSprintDays);
+    console.log(updatedSprintDays);
 
     if (!updatedSprintDays) {
       return res.status(HttpCode.NOT_FOUND).json({
