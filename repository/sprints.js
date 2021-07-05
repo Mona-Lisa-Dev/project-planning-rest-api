@@ -61,6 +61,8 @@ const updateSprintDays = async (projectId, sprintId, body) => {
     };
   });
 
+  console.log(days);
+
   const result = await Sprint.findOneAndUpdate(
     {
       _id: sprintId,
@@ -105,6 +107,19 @@ const deleteTaskSprintDays = async (projectId, sprintId, taskId) => {
   return result;
 };
 
+const updateSprintCurrenDay = async (projectId, sprintId, days) => {
+  const result = await Sprint.findOneAndUpdate(
+    {
+      _id: sprintId,
+      project: projectId,
+    },
+    { days },
+    { new: true },
+  );
+
+  return result;
+};
+
 module.exports = {
   addSprint,
   getById,
@@ -113,4 +128,5 @@ module.exports = {
   updateSprint,
   updateSprintDays,
   deleteTaskSprintDays,
+  updateSprintCurrenDay,
 };
