@@ -53,6 +53,7 @@ const updateSprintDays = async (projectId, sprintId, body) => {
   }); // (el => el) {"date":"2021-07-05","tasks":[]}
   //  days: days.map(el => console.log(Object.keys(el)[0], Object.keys(el)[1])), // date  tasks
   // days: days.map(el =>  console.log(Object.values(el)[0], Object.values(el)[1]), // 2021-07-05 []
+  if (!days) return;
   const arrDays = days.map(el => {
     return {
       [Object.keys(el)[0]]: Object.values(el)[0],
@@ -72,7 +73,35 @@ const updateSprintDays = async (projectId, sprintId, body) => {
     },
     { new: true },
   );
+  return result;
+};
 
+// TODO deleteTaskSprintDays
+const deleteTaskSprintDays = async (projectId, sprintId, taskId) => {
+  const { days } = await Sprint.findOne({
+    _id: sprintId,
+    project: projectId,
+  });
+  if (!days) return;
+  const arrDays = days.map(el => {
+    return {
+      [Object.keys(el)[0]]: Object.values(el)[0],
+      [Object.keys(el)[1]]: Object.values(el)[1].filter(
+        el => Object.values(el)[Object.keys(el).length - 1] !== taskId,
+      ),
+    };
+  });
+
+  const result = await Sprint.findOneAndUpdate(
+    {
+      _id: sprintId,
+      project: projectId,
+    },
+    {
+      days: arrDays,
+    },
+    { new: true },
+  );
   return result;
 };
 
@@ -83,4 +112,5 @@ module.exports = {
   removeSprint,
   updateSprint,
   updateSprintDays,
+  deleteTaskSprintDays,
 };

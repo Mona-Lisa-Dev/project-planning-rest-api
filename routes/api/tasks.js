@@ -29,11 +29,18 @@ router.get(
 
 router.get('/:sprintId', guard, valid.validateObjectId, ctrl.getAllTasks);
 
+// router.delete(
+//   '/:sprintId/:taskId',
+//   guard,
+//   valid.validateObjectId,
+//   ctrl.deleteTask,
+// );
+// TODO
 router.delete(
   '/:sprintId/:taskId',
   guard,
   valid.validateObjectId,
-  ctrl.deleteTask,
+  ctrl.deleteTaskDays,
 );
 
 module.exports = router;
