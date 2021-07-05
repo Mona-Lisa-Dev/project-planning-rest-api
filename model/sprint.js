@@ -35,7 +35,22 @@ const sprintSchema = new Schema(
       default: 0,
     },
 
-    totalDaly: {
+    // totalDaly: {
+    //   type: Array,
+    //   default: function () {
+    //     const arr = new Array(this.duration).fill();
+
+    //     const taskDay = (startDate, i) =>
+    //       dayjs(startDate).add(i, 'day').format('YYYY-MM-DD');
+
+    //     return arr.map((_, i) => {
+    //       return {
+    //         [taskDay(this.startDate, i)]: 0,
+    //       };
+    //     });
+    //   },
+    // },
+    days: {
       type: Array,
       default: function () {
         const arr = new Array(this.duration).fill();
@@ -45,7 +60,8 @@ const sprintSchema = new Schema(
 
         return arr.map((_, i) => {
           return {
-            [taskDay(this.startDate, i)]: 0,
+            date: taskDay(this.startDate, i),
+            tasks: [],
           };
         });
       },
