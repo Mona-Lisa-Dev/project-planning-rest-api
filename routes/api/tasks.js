@@ -13,7 +13,7 @@ router.post(
 );
 
 router.patch(
-  '/:sprintId/:taskId/day=:day/value=:value',
+  '/:projectId/:sprintId/:taskId/day=:day/value=:value',
   guard,
   valid.validateObjectId,
   valid.validateUpdTask,
