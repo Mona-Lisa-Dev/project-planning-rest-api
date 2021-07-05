@@ -20,6 +20,13 @@ const createTask = async (req, res, next) => {
     allScheduledTime: incomingScheduledTime + currentScheduledTime || 0,
   });
 
+  if (!sprint) {
+    return res.status(HttpCode.NOT_FOUND).json({
+      status: 'error',
+      code: HttpCode.NOT_FOUND,
+      message: 'Not found',
+    });
+  }
   try {
     const task = await Tasks.createTask({
       ...req.body,
@@ -29,6 +36,8 @@ const createTask = async (req, res, next) => {
       startDate: sprint.startDate,
     });
 
+    // TODO
+    await Sprints.updateSprintDays(projectId, sprintId, task);
     return res
       .status(HttpCode.CREATED)
       .json({ status: 'success', code: HttpCode.CREATED, data: { task } });
@@ -62,33 +71,33 @@ const updateTask = async (req, res, next) => {
   try {
     const findTask = await Tasks.getTaskById(sprintId, taskId);
 
-    if (!findTask) {
-      return res.status(HttpCode.NOT_FOUND).json({
-        status: 'error',
-        code: HttpCode.NOT_FOUND,
-        message: 'Task is not found',
-      });
-    }
-    const projectId = findTask.project;
-    const findSprint = await Sprints.getById(projectId, sprintId);
+    // if (!findTask) {
+    //   return res.status(HttpCode.NOT_FOUND).json({
+    //     status: 'error',
+    //     code: HttpCode.NOT_FOUND,
+    //     message: 'Task is not found',
+    //   });
+    // }
+    // const projectId = findTask.project;
+    // const findSprint = await Sprints.getById(projectId, sprintId);
 
-    const currentTotalDaly = findSprint.totalDaly;
+    // const currentTotalDaly = findSprint.totalDaly;
 
-    const updatedTotalDaly = currentTotalDaly.map(el =>
-      Object.keys(el)[0] === day
-        ? { [Object.keys(el)[0]]: Object.values(el)[0] + parseInt(value) }
-        : el,
-    );
+    // const updatedTotalDaly = currentTotalDaly.map(el =>
+    //   Object.keys(el)[0] === day
+    //     ? { [Object.keys(el)[0]]: Object.values(el)[0] + parseInt(value) }
+    //     : el,
+    // );
 
-    Sprints.updateSprint(projectId, sprintId, {
-      totalDaly: updatedTotalDaly,
-    });
+    // Sprints.updateSprint(projectId, sprintId, {
+    //   totalDaly: updatedTotalDaly,
+    // });
 
-    const taskByDaysUpd = findTask.taskByDays.map(el =>
-      Object.keys(el)[0] === day
-        ? { [Object.keys(el)[0]]: parseInt(value) }
-        : el,
-    );
+    // const taskByDaysUpd = findTask.taskByDays.map(el =>
+    //   Object.keys(el)[0] === day
+    //     ? { [Object.keys(el)[0]]: parseInt(value) }
+    //     : el,
+    // );
 
     const totalTime = await findTask.taskByDays.reduce(
       (acc, el) =>
@@ -101,7 +110,7 @@ const updateTask = async (req, res, next) => {
     const task = await Tasks.updateTask(
       sprintId,
       taskId,
-      taskByDaysUpd,
+      // taskByDaysUpd,
       totalTime,
     );
 
