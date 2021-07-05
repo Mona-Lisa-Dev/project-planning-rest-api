@@ -71,17 +71,18 @@ const updateTask = async (req, res, next) => {
   try {
     const findSprint = await Sprints.getById(projectId, sprintId);
 
-    const updatedSprintDays = findSprint.days.map(el => {
-      if (Object.values(el)[0] === day) {
-        const updatedTasksArr = el.tasks.map(el =>
-          el.id === taskId ? { ...el, spenHours: parseInt(value) } : el,
-        );
+    const updatedSprintDays = findSprint.days.map(el =>
+      Object.values(el)[0] === day
+        ? {
+            ...el,
+            tasks: el.tasks.map(el =>
+              el.id === taskId ? { ...el, spenHours: parseInt(value) } : el,
+            ),
+          }
+        : el,
+    );
 
-        return { ...el, tasks: updatedTasksArr };
-      }
-
-      return el;
-    });
+    // console.log(updatedSprintDays);
 
     if (!updatedSprintDays) {
       return res.status(HttpCode.NOT_FOUND).json({
@@ -91,7 +92,19 @@ const updateTask = async (req, res, next) => {
       });
     }
 
-    // const sprint = Sprints.updateSprintDays;
+    const sprint = Sprints.updateSprintCurrenDay(
+      projectId,
+      sprintId,
+      updatedSprintDays,
+    );
+
+    if (sprint) {
+      return res.status(HttpCode.OK).json({
+        status: 'success',
+        code: HttpCode.OK,
+        data: { updatedSprintDays },
+      });
+    }
 
     // const projectId = findTask.project;
     // const findSprint = await Sprints.getById(projectId, sprintId);
