@@ -61,6 +61,8 @@ const updateSprintDays = async (projectId, sprintId, body) => {
     };
   });
 
+  console.log(days);
+
   const result = await Sprint.findOneAndUpdate(
     {
       _id: sprintId,

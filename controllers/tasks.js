@@ -66,18 +66,33 @@ const getTaskById = async (req, res, next) => {
 };
 
 const updateTask = async (req, res, next) => {
-  const { sprintId, taskId, day, value } = req.params;
+  const { projectId, sprintId, taskId, day, value } = req.params;
 
   try {
-    const findTask = await Tasks.getTaskById(sprintId, taskId);
+    const findSprint = await Sprints.getById(projectId, sprintId);
 
-    // if (!findTask) {
-    //   return res.status(HttpCode.NOT_FOUND).json({
-    //     status: 'error',
-    //     code: HttpCode.NOT_FOUND,
-    //     message: 'Task is not found',
-    //   });
-    // }
+    const updatedSprintDays = findSprint.days.map(el => {
+      if (Object.values(el)[0] === day) {
+        const updatedTasksArr = el.tasks.map(el =>
+          el.id === taskId ? { ...el, spenHours: parseInt(value) } : el,
+        );
+
+        return { ...el, tasks: updatedTasksArr };
+      }
+
+      return el;
+    });
+
+    if (!updatedSprintDays) {
+      return res.status(HttpCode.NOT_FOUND).json({
+        status: 'error',
+        code: HttpCode.NOT_FOUND,
+        message: 'Sprint is not found',
+      });
+    }
+
+    // const sprint = Sprints.updateSprintDays;
+
     // const projectId = findTask.project;
     // const findSprint = await Sprints.getById(projectId, sprintId);
 
@@ -99,28 +114,28 @@ const updateTask = async (req, res, next) => {
     //     : el,
     // );
 
-    const totalTime = await findTask.taskByDays.reduce(
-      (acc, el) =>
-        Object.keys(el)[0] === day
-          ? acc + parseInt(value)
-          : acc + Object.values(el)[0],
-      0,
-    );
+    // const totalTime = await findTask.taskByDays.reduce(
+    //   (acc, el) =>
+    //     Object.keys(el)[0] === day
+    //       ? acc + parseInt(value)
+    //       : acc + Object.values(el)[0],
+    //   0,
+    // );
 
-    const task = await Tasks.updateTask(
-      sprintId,
-      taskId,
-      // taskByDaysUpd,
-      totalTime,
-    );
+    // const task = await Tasks.updateTask(
+    //   sprintId,
+    //   taskId,
+    //   // taskByDaysUpd,
+    //   totalTime,
+    // );
 
-    if (task) {
-      return res.status(HttpCode.OK).json({
-        status: 'success',
-        code: HttpCode.OK,
-        data: { task },
-      });
-    }
+    // if (task) {
+    //   return res.status(HttpCode.OK).json({
+    //     status: 'success',
+    //     code: HttpCode.OK,
+    //     data: { task },
+    //   });
+    // }
 
     return res.status(HttpCode.NOT_FOUND).json({
       status: 'error',
