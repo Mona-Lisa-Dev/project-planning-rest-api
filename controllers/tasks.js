@@ -72,7 +72,7 @@ const updateTask = async (req, res, next) => {
     const findSprint = await Sprints.getById(projectId, sprintId);
 
     const updatedSprintDays = findSprint.days.map(el =>
-      Object.values(el)[0] === day
+      el.date === day
         ? {
             ...el,
             tasks: el.tasks.map(el =>
