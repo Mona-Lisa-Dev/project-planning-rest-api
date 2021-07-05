@@ -76,8 +76,10 @@ const updateTask = async (req, res, next) => {
         el.date === day
           ? {
               ...el,
-              tasks: el.tasks.map(el =>
-                el.id === taskId ? { ...el, spenHours: parseInt(value) } : el,
+              tasks: el.tasks.map(task =>
+                task.id === taskId
+                  ? { ...task, spenHours: parseInt(value) }
+                  : task,
               ),
             }
           : el,
@@ -92,8 +94,6 @@ const updateTask = async (req, res, next) => {
           ),
         };
       });
-
-    console.log(updatedSprintDays);
 
     if (!updatedSprintDays) {
       return res.status(HttpCode.NOT_FOUND).json({
