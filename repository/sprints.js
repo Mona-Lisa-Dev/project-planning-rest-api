@@ -45,10 +45,42 @@ const getById = async (projectId, sprintId) => {
   return result;
 };
 
+// TODO create new task
+const updateSprintDays = async (projectId, sprintId, body) => {
+  const { days } = await Sprint.findOne({
+    _id: sprintId,
+    project: projectId,
+  }); // (el => el) {"date":"2021-07-05","tasks":[]}
+  //  days: days.map(el => console.log(Object.keys(el)[0], Object.keys(el)[1])), // date  tasks
+  // days: days.map(el =>  console.log(Object.values(el)[0], Object.values(el)[1]), // 2021-07-05 []
+  const arrDays = days.map(el => {
+    return {
+      [Object.keys(el)[0]]: Object.values(el)[0],
+      [Object.keys(el)[1]]: Object.values(el)[1].concat(body),
+    };
+  });
+
+  const result = await Sprint.findOneAndUpdate(
+    {
+      _id: sprintId,
+      project: projectId,
+    },
+
+    {
+      days: arrDays,
+      // days: days.map(el => el),
+    },
+    { new: true },
+  );
+
+  return result;
+};
+
 module.exports = {
   addSprint,
   getById,
   getAllSprints,
   removeSprint,
   updateSprint,
+  updateSprintDays,
 };
