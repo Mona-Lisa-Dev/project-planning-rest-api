@@ -575,7 +575,7 @@
       }
     },
 
-    "/api/sprints/{projectId}/name": {
+    "/api/sprints/{projectId}/{sprintId}/name": {
       "patch": {
         "tags": ["Sprints"],
         "summary": "Update sprint title",
@@ -586,6 +586,13 @@
             "name": "projectId",
             "required": true,
             "description": "Project id",
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "sprintId",
+            "required": true,
+            "description": "Sprint id",
             "type": "string"
           }
         ],
@@ -762,12 +769,19 @@
       }
     },
 
-    "/api/tasks/{sprintId}/{taskId}/day={day}/value={value}": {
+    "/api/tasks/{projectId}/{sprintId}/{taskId}/day={day}/value={value}": {
       "patch": {
         "tags": ["Tasks"],
         "summary": "Update time spent on task during the day",
         "security": [{ "Bearer": [] }],
         "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "required": true,
+            "description": "Project id",
+            "type": "string"
+          },
           {
             "in": "path",
             "name": "sprintId",
