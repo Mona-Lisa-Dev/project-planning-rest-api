@@ -13,10 +13,6 @@ const taskSchema = new Schema(
       type: Number,
       required: true,
     },
-    spenHours: {
-      type: Number,
-      default: 0,
-    },
 
     totalTime: {
       type: Number,

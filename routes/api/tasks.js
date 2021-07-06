@@ -13,7 +13,7 @@ router.post(
 );
 
 router.patch(
-  '/:projectId/:sprintId/:taskId/day=:day/value=:value',
+  '/:sprintId/:taskId/day=:day/value=:value',
   guard,
   valid.validateObjectId,
   valid.validateUpdTask,
@@ -35,12 +35,5 @@ router.delete(
   valid.validateObjectId,
   ctrl.deleteTask,
 );
-// TODO
-// router.delete(
-//   '/:sprintId/:taskId',
-//   guard,
-//   valid.validateObjectId,
-//   ctrl.deleteTaskDays,
-// );
 
 module.exports = router;

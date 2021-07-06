@@ -124,7 +124,7 @@ const updateProjectDescription = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-};
+}; 
 
 const addParticipant = async (req, res, next) => {
   const userId = req.user.id; // TODO  userId  проверить используется ли в итоге
