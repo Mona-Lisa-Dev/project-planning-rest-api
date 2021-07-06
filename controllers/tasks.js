@@ -74,11 +74,15 @@ const updateTask = async (req, res, next) => {
 
     const currentTotalDaly = findSprint.totalDaly;
 
+    // console.log(findTask.taskByDays);
+
     const updatedTotalDaly = currentTotalDaly.map(el =>
       Object.keys(el)[0] === day
-        ? { [Object.keys(el)[0]]: Object.values(el)[0] + parseInt(value) }
+        ? {
+            [Object.keys(el)[0]]: Object.values(el)[0] + parseInt(value),
+          }
         : el,
-    );
+    ); // sprint.totalDaly нужно что бы пересчитывало а не просто добавляло
 
     Sprints.updateSprint(projectId, sprintId, {
       totalDaly: updatedTotalDaly,
@@ -161,6 +165,16 @@ const getTaskByDay = async (req, res, next) => {
 
   try {
     const tasks = await Tasks.allTasks(sprintId);
+
+    console.log(tasks);
+
+    if (tasks.length === 0) {
+      return res.status(HttpCode.NOT_FOUND).json({
+        status: 'error',
+        code: HttpCode.NOT_FOUND,
+        message: 'Tasks is not found',
+      });
+    }
 
     const tasksByDay = tasks.map(task => {
       return {

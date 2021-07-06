@@ -24,6 +24,7 @@ router.get(
   '/:sprintId/byday=:day',
   guard,
   valid.validateObjectId,
+  valid.validateGetTaskByDay,
   ctrl.getTaskByDay,
 );
 
