@@ -183,41 +183,10 @@ const getAllTasks = async (req, res, next) => {
   }
 };
 
-// const deleteTask = async (req, res, next) => {
-//   const { sprintId, taskId } = req.params;
-//   try {
-//     const task = await Tasks.removeTask(sprintId, taskId);
-//     if (task) {
-//       return res.status(HttpCode.OK).json({
-//         status: 'success',
-//         code: HttpCode.OK,
-//         message: 'Task is deleted',
-//       });
-//     }
-//     return res.status(HttpCode.NOT_FOUND).json({
-//       status: 'error',
-//       code: HttpCode.NOT_FOUND,
-//       message: 'The task is not found',
-//     });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
-// TODO  deleteTaskDays
-const deleteTaskDays = async (req, res, next) => {
+const deleteTask = async (req, res, next) => {
   const { sprintId, taskId } = req.params;
   try {
     const task = await Tasks.removeTask(sprintId, taskId);
-
-    if (!task) {
-      return res.status(HttpCode.NOT_FOUND).json({
-        status: 'error',
-        code: HttpCode.NOT_FOUND,
-        message: 'Not found task',
-      });
-    }
-    const projectId = task.project;
-    await Sprints.deleteTaskSprintDays(projectId, sprintId, taskId);
     if (task) {
       return res.status(HttpCode.OK).json({
         status: 'success',
@@ -234,12 +203,43 @@ const deleteTaskDays = async (req, res, next) => {
     next(error);
   }
 };
+// TODO  deleteTaskDays
+// const deleteTaskDays = async (req, res, next) => {
+//   const { sprintId, taskId } = req.params;
+//   try {
+//     const task = await Tasks.removeTask(sprintId, taskId);
+
+//     if (!task) {
+//       return res.status(HttpCode.NOT_FOUND).json({
+//         status: 'error',
+//         code: HttpCode.NOT_FOUND,
+//         message: 'Not found task',
+//       });
+//     }
+//     const projectId = task.project;
+//     await Sprints.deleteTaskSprintDays(projectId, sprintId, taskId);
+//     if (task) {
+//       return res.status(HttpCode.OK).json({
+//         status: 'success',
+//         code: HttpCode.OK,
+//         message: 'Task is deleted',
+//       });
+//     }
+//     return res.status(HttpCode.NOT_FOUND).json({
+//       status: 'error',
+//       code: HttpCode.NOT_FOUND,
+//       message: 'The task is not found',
+//     });
+//   } catch (error) {
+//     next(error);
+//   }
+// };
 
 module.exports = {
   createTask,
   getTaskById,
   updateTask,
   getAllTasks,
-  // deleteTask,
-  deleteTaskDays,
+  deleteTask,
+  // deleteTaskDays,
 };
