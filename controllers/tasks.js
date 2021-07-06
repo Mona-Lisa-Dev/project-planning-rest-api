@@ -174,8 +174,6 @@ const deleteTask = async (req, res, next) => {
     const projectId = foundTask.project;
     const foundSprint = await Sprints.getById(projectId, sprintId);
 
-    console.log(foundSprint.allScheduledTime);
-
     Sprints.updateSprint(projectId, sprintId, {
       allScheduledTime: foundSprint.allScheduledTime - foundTask.scheduledTime,
     });
@@ -196,7 +194,7 @@ const deleteTask = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-}; // при удалении  не обновляется allScheduledTime в спринте
+};
 
 const getTaskByDay = async (req, res, next) => {
   const { sprintId, day } = req.params;
@@ -219,8 +217,8 @@ const getTaskByDay = async (req, res, next) => {
         scheduledTime: task.scheduledTime,
         sprint: task.sprint,
         project: task.project,
-        id: task.id,
         byDay: task.taskByDays.find(days => Object.keys(days)[0] === day),
+        id: task.id,
       };
     });
 
