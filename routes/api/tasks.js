@@ -21,6 +21,13 @@ router.patch(
 );
 
 router.get(
+  '/:sprintId/byday=:day',
+  guard,
+  valid.validateObjectId,
+  ctrl.getTaskByDay,
+);
+
+router.get(
   '/:sprintId/:taskId',
   guard,
   valid.validateObjectId,

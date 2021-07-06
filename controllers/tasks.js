@@ -156,10 +156,44 @@ const deleteTask = async (req, res, next) => {
   }
 };
 
+const getTaskByDay = async (req, res, next) => {
+  const { sprintId, day } = req.params;
+
+  try {
+    const tasks = await Tasks.allTasks(sprintId);
+
+    const tasksByDay = tasks.map(task => {
+      return {
+        name: task.name,
+        totalTime: task.totalTime,
+        scheduledTime: task.scheduledTime,
+        sprint: task.sprint,
+        project: task.project,
+        byDay: task.taskByDays.find(days => Object.keys(days)[0] === day),
+      };
+    });
+
+    if (tasks) {
+      return res
+        .status(HttpCode.OK)
+        .json({ status: 'success', code: HttpCode.OK, data: { tasksByDay } });
+    }
+
+    return res.status(HttpCode.NOT_FOUND).json({
+      status: 'error',
+      code: HttpCode.NOT_FOUND,
+      message: 'Tasks found',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   createTask,
   getTaskById,
   updateTask,
   getAllTasks,
   deleteTask,
+  getTaskByDay,
 };
