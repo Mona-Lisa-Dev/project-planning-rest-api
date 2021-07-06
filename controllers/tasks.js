@@ -18,7 +18,7 @@ const createTask = async (req, res, next) => {
   const currentScheduledTime = findSprint.allScheduledTime;
   const sprint = await Sprints.updateSprint(projectId, sprintId, {
     allScheduledTime: incomingScheduledTime + currentScheduledTime || 0,
-  });
+  }); // что то не  так
 
   try {
     const task = await Tasks.createTask({
@@ -69,24 +69,24 @@ const updateTask = async (req, res, next) => {
         message: 'Task is not found',
       });
     }
-    const projectId = findTask.project;
-    const findSprint = await Sprints.getById(projectId, sprintId);
+    // const projectId = findTask.project;
+    // const findSprint = await Sprints.getById(projectId, sprintId);
 
-    const currentTotalDaly = findSprint.totalDaly;
+    // const currentTotalDaly = findSprint.totalDaly;
 
     // console.log(findTask.taskByDays);
 
-    const updatedTotalDaly = currentTotalDaly.map(el =>
-      Object.keys(el)[0] === day
-        ? {
-            [Object.keys(el)[0]]: Object.values(el)[0] + parseInt(value),
-          }
-        : el,
-    ); // sprint.totalDaly нужно что бы пересчитывало а не просто добавляло
+    // const updatedTotalDaly = currentTotalDaly.map(el =>
+    //   Object.keys(el)[0] === day
+    //     ? {
+    //         [Object.keys(el)[0]]: parseInt(value),
+    //       }
+    //     : el,
+    // ); // sprint.totalDaly нужно что бы пересчитывало а не просто добавляло
 
-    Sprints.updateSprint(projectId, sprintId, {
-      totalDaly: updatedTotalDaly,
-    });
+    // Sprints.updateSprint(projectId, sprintId, {
+    //   totalDaly: updatedTotalDaly,
+    // });
 
     const taskByDaysUpd = findTask.taskByDays.map(el =>
       Object.keys(el)[0] === day
@@ -108,6 +108,34 @@ const updateTask = async (req, res, next) => {
       taskByDaysUpd,
       totalTime,
     );
+
+    // const updatedTask = await Tasks.getTaskById(sprintId, taskId);
+    // const taskDays = updatedTask.taskByDays;
+    // const previosDayValye = Object.values(
+    //   taskDays.find(el => Object.keys(el)[0] === day),
+    // )[0];
+
+    // console.log(previosDayValye);
+
+    // const tasks = await Tasks.allTasks(sprintId);
+    // тут проверка на не найдено
+
+    // const arraysOfDays = tasks.reduce(
+    //   (acc, task) => [...acc, ...task.taskByDays],
+    //   [],
+    // );
+
+    // const days = arraysOfDays.reduce((acc, day) => {
+    //   if (acc.filter(el => Object.keys(el)[0] === Object.keys(day)[0])) {
+    //     return { ...acc };
+    //   }
+
+    //   return;
+    // }, []);
+
+    // console.log(days);
+
+    // console.log(arraysOfDays.reduce((acc, el) => [...acc, ...el], []));
 
     if (task) {
       return res.status(HttpCode.OK).json({
@@ -142,6 +170,16 @@ const getAllTasks = async (req, res, next) => {
 const deleteTask = async (req, res, next) => {
   const { sprintId, taskId } = req.params;
   try {
+    const foundTask = await Tasks.getTaskById(sprintId, taskId);
+    const projectId = foundTask.project;
+    const foundSprint = await Sprints.getById(projectId, sprintId);
+
+    console.log(foundSprint.allScheduledTime);
+
+    Sprints.updateSprint(projectId, sprintId, {
+      allScheduledTime: foundSprint.allScheduledTime - foundTask.scheduledTime,
+    });
+
     const task = await Tasks.removeTask(sprintId, taskId);
     if (task) {
       return res.status(HttpCode.OK).json({
@@ -158,15 +196,13 @@ const deleteTask = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-};
+}; // при удалении  не обновляется allScheduledTime в спринте
 
 const getTaskByDay = async (req, res, next) => {
   const { sprintId, day } = req.params;
 
   try {
     const tasks = await Tasks.allTasks(sprintId);
-
-    console.log(tasks);
 
     if (tasks.length === 0) {
       return res.status(HttpCode.NOT_FOUND).json({
@@ -183,6 +219,7 @@ const getTaskByDay = async (req, res, next) => {
         scheduledTime: task.scheduledTime,
         sprint: task.sprint,
         project: task.project,
+        id: task.id,
         byDay: task.taskByDays.find(days => Object.keys(days)[0] === day),
       };
     });
@@ -196,7 +233,7 @@ const getTaskByDay = async (req, res, next) => {
     return res.status(HttpCode.NOT_FOUND).json({
       status: 'error',
       code: HttpCode.NOT_FOUND,
-      message: 'Tasks found',
+      message: 'Tasks is found',
     });
   } catch (error) {
     next(error);
