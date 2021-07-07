@@ -20,7 +20,7 @@ router.patch(
   valid.validateObjectId,
   valid.validateNameProject,
   ctrl.updateProjectName,
-);
+); 
 
 router.patch(
   '/:projectId/description',
@@ -28,7 +28,7 @@ router.patch(
   valid.validateObjectId,
   valid.validateDescriptionProject,
   ctrl.updateProjectDescription,
-);
+); 
 
 router.patch(
   '/:projectId/participant',
@@ -36,7 +36,7 @@ router.patch(
   valid.validateObjectId,
   valid.validateEmail,
   ctrl.addParticipant,
-);
+); 
 
 router.post(
   '/:projectId/participant',
