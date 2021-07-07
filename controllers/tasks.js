@@ -18,7 +18,7 @@ const createTask = async (req, res, next) => {
   const currentScheduledTime = findSprint.allScheduledTime;
   const sprint = await Sprints.updateSprint(projectId, sprintId, {
     allScheduledTime: incomingScheduledTime + currentScheduledTime || 0,
-  }); // что то не  так
+  });
 
   try {
     const task = await Tasks.createTask({
@@ -69,24 +69,6 @@ const updateTask = async (req, res, next) => {
         message: 'Task is not found',
       });
     }
-    // const projectId = findTask.project;
-    // const findSprint = await Sprints.getById(projectId, sprintId);
-
-    // const currentTotalDaly = findSprint.totalDaly;
-
-    // console.log(findTask.taskByDays);
-
-    // const updatedTotalDaly = currentTotalDaly.map(el =>
-    //   Object.keys(el)[0] === day
-    //     ? {
-    //         [Object.keys(el)[0]]: parseInt(value),
-    //       }
-    //     : el,
-    // ); // sprint.totalDaly нужно что бы пересчитывало а не просто добавляло
-
-    // Sprints.updateSprint(projectId, sprintId, {
-    //   totalDaly: updatedTotalDaly,
-    // });
 
     const taskByDaysUpd = findTask.taskByDays.map(el =>
       Object.keys(el)[0] === day
@@ -109,33 +91,28 @@ const updateTask = async (req, res, next) => {
       totalTime,
     );
 
-    // const updatedTask = await Tasks.getTaskById(sprintId, taskId);
-    // const taskDays = updatedTask.taskByDays;
-    // const previosDayValye = Object.values(
-    //   taskDays.find(el => Object.keys(el)[0] === day),
-    // )[0];
+    const findTasks = await Tasks.allTasks(sprintId);
 
-    // console.log(previosDayValye);
+    const tasksTimeSum = findTasks
+      .map(task =>
+        task.taskByDays.reduce((acc, days) => {
+          if (Object.keys(days)[0] === day) {
+            return acc + Object.values(days)[0];
+          } else {
+            return acc;
+          }
+        }, 0),
+      )
+      .reduce((acc, el) => acc + el, 0); //     это пипец какой то, ну пусть будет=)
 
-    // const tasks = await Tasks.allTasks(sprintId);
-    // тут проверка на не найдено
+    const projectId = findTask.project;
+    const findSprint = await Sprints.getById(projectId, sprintId);
+    const oldTotalDaly = findSprint.totalDaly;
+    const newTotalDaly = oldTotalDaly.map(el =>
+      Object.keys(el)[0] === day ? { [day]: tasksTimeSum } : el,
+    );
 
-    // const arraysOfDays = tasks.reduce(
-    //   (acc, task) => [...acc, ...task.taskByDays],
-    //   [],
-    // );
-
-    // const days = arraysOfDays.reduce((acc, day) => {
-    //   if (acc.filter(el => Object.keys(el)[0] === Object.keys(day)[0])) {
-    //     return { ...acc };
-    //   }
-
-    //   return;
-    // }, []);
-
-    // console.log(days);
-
-    // console.log(arraysOfDays.reduce((acc, el) => [...acc, ...el], []));
+    Sprints.updateSprintTotalDaly(projectId, sprintId, newTotalDaly);
 
     if (task) {
       return res.status(HttpCode.OK).json({

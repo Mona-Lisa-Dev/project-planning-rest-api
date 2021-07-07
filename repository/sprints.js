@@ -45,10 +45,24 @@ const getById = async (projectId, sprintId) => {
   return result;
 };
 
+const updateSprintTotalDaly = async (projectId, sprintId, totalDaly) => {
+  const result = await Sprint.findOneAndUpdate(
+    {
+      _id: sprintId,
+      project: projectId,
+    },
+    { totalDaly },
+    { new: true },
+  );
+
+  return result;
+};
+
 module.exports = {
   addSprint,
   getById,
   getAllSprints,
   removeSprint,
   updateSprint,
+  updateSprintTotalDaly,
 };
