@@ -25,7 +25,7 @@ const sprintSchema = new Schema(
       type: Date,
       required: true,
       default: function () {
-        return dayjs(this.startDate).add(this.duration - 1, 'day');
+        return dayjs(this.startDate).add(this.duration, 'day');
       },
       transform: date => dayjs(date).format('YYYY-MM-DD'),
     },
