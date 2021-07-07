@@ -18,7 +18,7 @@ const removeSprint = async (projectId, sprintId) => {
   });
   if (result) {
     await Task.deleteMany({
-      project: projectId,
+      sprint: sprintId,
     });
   }
   return result;
