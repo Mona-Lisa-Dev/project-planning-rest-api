@@ -4,7 +4,7 @@ const { HttpCode } = require('../helpers/constants');
 
 const schemaCreateProject = Joi.object({
   name: Joi.string().required(),
-  description: Joi.string().optional(),
+  description: Joi.string().allow(''),
 });
 
 const schemaNameProject = Joi.object({
