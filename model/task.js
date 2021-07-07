@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const { Schema, SchemaTypes } = mongoose;
-// const dayjs = require('dayjs');
+const dayjs = require('dayjs');
 
 const taskSchema = new Schema(
   {
@@ -12,10 +12,6 @@ const taskSchema = new Schema(
     scheduledTime: {
       type: Number,
       required: true,
-    },
-    spenHours: {
-      type: Number,
-      default: 0,
     },
 
     totalTime: {
@@ -33,21 +29,21 @@ const taskSchema = new Schema(
       default: 0,
     }, // не отдается на фронт, нужен для расчета дней
 
-    // taskByDays: {
-    //   type: Array,
-    //   default: function () {
-    //     const arr = new Array(this.durationSprint).fill();
+    taskByDays: {
+      type: Array,
+      default: function () {
+        const arr = new Array(this.durationSprint).fill();
 
-    //     const taskDay = (startDate, i) =>
-    //       dayjs(startDate).add(i, 'day').format('YYYY-MM-DD');
+        const taskDay = (startDate, i) =>
+          dayjs(startDate).add(i, 'day').format('YYYY-MM-DD');
 
-    //     return arr.map((_, i) => {
-    //       return {
-    //         [taskDay(this.startDate, i)]: 0,
-    //       };
-    //     });
-    //   },
-    // },
+        return arr.map((_, i) => {
+          return {
+            [taskDay(this.startDate, i)]: 0,
+          };
+        });
+      },
+    },
 
     project: {
       type: SchemaTypes.ObjectId,

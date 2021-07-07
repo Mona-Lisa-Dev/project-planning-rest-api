@@ -13,11 +13,19 @@ router.post(
 );
 
 router.patch(
-  '/:projectId/:sprintId/:taskId/day=:day/value=:value',
+  '/:sprintId/:taskId/day=:day/value=:value',
   guard,
   valid.validateObjectId,
   valid.validateUpdTask,
   ctrl.updateTask,
+);
+
+router.get(
+  '/:sprintId/byday=:day',
+  guard,
+  valid.validateObjectId,
+  valid.validateGetTaskByDay,
+  ctrl.getTaskByDay,
 );
 
 router.get(
@@ -29,18 +37,11 @@ router.get(
 
 router.get('/:sprintId', guard, valid.validateObjectId, ctrl.getAllTasks);
 
-// router.delete(
-//   '/:sprintId/:taskId',
-//   guard,
-//   valid.validateObjectId,
-//   ctrl.deleteTask,
-// );
-// TODO
 router.delete(
   '/:sprintId/:taskId',
   guard,
   valid.validateObjectId,
-  ctrl.deleteTaskDays,
+  ctrl.deleteTask,
 );
 
 module.exports = router;
