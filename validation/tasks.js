@@ -85,3 +85,20 @@ module.exports.validateObjectId = (req, _res, next) => {
     next,
   );
 };
+
+module.exports.validateGetTaskByDay = async (req, _res, next) => {
+  const isValidDate = value =>
+    /([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/.test(value);
+
+  const { day } = req.params;
+
+  !isValidDate(day) &&
+    next({
+      status: HttpCode.BAD_REQUEST,
+      message: `day should be YYYY-MM-DD`,
+    });
+
+  next();
+};
+
+// TODO: поправить валидацию даты
