@@ -208,7 +208,7 @@ const getTaskByDay = async (req, res, next) => {
     return res.status(HttpCode.NOT_FOUND).json({
       status: 'error',
       code: HttpCode.NOT_FOUND,
-      message: 'Tasks is found',
+      message: 'Tasks is not found',
     });
   } catch (error) {
     next(error);

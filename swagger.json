@@ -769,19 +769,12 @@
       }
     },
 
-    "/api/tasks/{projectId}/{sprintId}/{taskId}/day={day}/value={value}": {
+    "/api/tasks/{sprintId}/{taskId}/day={day}/value={value}": {
       "patch": {
         "tags": ["Tasks"],
         "summary": "Update time spent on task during the day",
         "security": [{ "Bearer": [] }],
         "parameters": [
-          {
-            "in": "path",
-            "name": "projectId",
-            "required": true,
-            "description": "Project id",
-            "type": "string"
-          },
           {
             "in": "path",
             "name": "sprintId",
@@ -855,6 +848,50 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetTasksResponce"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authorization token is missing",
+            "content": {}
+          },
+          "404": {
+            "description": "Tasks are not found",
+            "content": {}
+          }
+        }
+      }
+    },
+
+    "/api/tasks/{sprintId}/byday={day}": {
+      "get": {
+        "tags": ["Tasks"],
+        "summary": "Get tasks by one day",
+        "security": [{ "Bearer": [] }],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "sprintId",
+            "required": true,
+            "description": "Sprint id",
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "day",
+            "required": true,
+            "description": "Date",
+            "type": "date"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Task found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetTasksByDayResponce"
                 }
               }
             }
@@ -1163,6 +1200,10 @@
             "type": "string",
             "example": "success"
           },
+          "code":{
+            "type": "number",
+            "example": 200
+          },
           "data": {
             "type": "object",
             "properties": {
@@ -1203,26 +1244,36 @@
             "type": "string",
             "example": "success"
           },
-          "user": {
+          "code":{
+            "type": "number",
+            "example": 200
+          },
+
+          "data": {
             "type": "object",
-            "properties": {
-              "id": {
-                "type": "string",
-                "description": "User's id",
-                "example": "507f1f77bcf86cd799439012"
-              },
-              "name": {
-                "type": "string",
-                "description": "User's name",
-                "example": "John"
-              },
-              "email": {
-                "type": "string",
-                "description": "User's email",
-                "format": "email"
+            "properties":{
+              "user": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "User's id",
+                    "example": "507f1f77bcf86cd799439012"
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "User's name",
+                    "example": "John"
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "User's email",
+                    "format": "email"
+                  }
+                }
               }
-            }
-          }
+            } 
+          } 
         }
       },
 
@@ -1233,26 +1284,35 @@
             "type": "string",
             "example": "success"
           },
-          "user": {
+          "code":{
+            "type": "number",
+            "example": 200
+          },
+          "data": {
             "type": "object",
-            "properties": {
-              "id": {
-                "type": "string",
-                "description": "User's id",
-                "example": "507f1f77bcf86cd799439012"
-              },
-              "name": {
-                "type": "string",
-                "description": "User's name",
-                "example": "John"
-              },
-              "email": {
-                "type": "string",
-                "description": "User's email",
-                "format": "email"
+            "properties":{
+              "user": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "User's id",
+                    "example": "507f1f77bcf86cd799439012"
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "User's name",
+                    "example": "John"
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "User's email",
+                    "format": "email"
+                  }
+                }
               }
-            }
-          }
+            } 
+          } 
         }
       },
 
@@ -1319,23 +1379,88 @@
             "type": "string",
             "example": "success"
           },
-          "project": {
-            "$ref": "#/components/schemas/ProjectSchema"
+          "code":{
+            "type": "number",
+            "example": 201
+          },
+          "data": {
+            "type": "object",
+            "properties":{
+              "project": {
+                "type": "object",
+                "properties": {
+               "participants": {
+                "type": "array",
+                "description": "Project's participants' emails",
+                "example": "[lisa@mail.com, jack@example.com, jason@work.com]"
+              },
+              "name": {
+                "type": "string",
+                "description": "Project's name",
+                "example": "Project1"
+              },
+              "description": {
+                "type": "string",
+                "description": "Project's description",
+                "example": "Web-site development"
+              },
+              "owner": {
+                    "type": "string",
+                    "description": "Owner's id",
+                    "example": "507f1f77bcf86cd799439012"
+              },
+              "createdAt": {
+                "type": "date",
+                "description": "date of creation",
+                "example": "2021-07-03T11:59:55.633Z"
+              },
+              "updatedAt": {
+                "type": "date",
+                "description": "date of update",
+                "example": "2021-07-03T11:59:55.633Z"
+              },
+              "id": {
+                "type": "string",
+                "description": "Project's id",
+                "example": "507f1f77bcf86cd799439012"
+              }
+            }
+              }
+            } 
+            
           }
         }
       },
 
       "GetProjectsResponce": {
-        "type": "array",
+        "type": "object",
         "properties": {
           "status": {
             "type": "string",
             "example": "success"
-          }
-        },
-        "description": "Array of user's projects",
-        "items": {
-          "$ref": "#/components/schemas/ProjectSchema"
+          },
+          "code":{
+            "type": "number",
+            "example": 200
+          },
+          "data": {
+            "type": "object",
+            "properties":{
+              "projects": {
+                "type": "array",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "example": "success"
+                  }
+                },
+                "description": "Array of user's projects",
+                "items": {
+                  "$ref": "#/components/schemas/ProjectSchema"
+                }
+                }
+            } 
+          } 
         }
       },
       "GetProjectResponse": {
@@ -1345,9 +1470,19 @@
             "type": "string",
             "example": "success"
           },
-          "project": {
-            "$ref": "#/components/schemas/ProjectSchema"
-          }
+          "code":{
+            "type": "number",
+            "example": 200
+          },
+          "data": {
+            "type": "object",
+            "properties":{
+              "project": {
+                    "$ref": "#/components/schemas/ProjectSchema"
+                }
+            } 
+          } 
+          
         }
       },
 
@@ -1357,6 +1492,10 @@
           "status": {
             "type": "string",
             "example": "success"
+          },
+          "code":{
+            "type": "number",
+            "example": 200
           },
           "project": {
             "type": "object",
@@ -1423,6 +1562,10 @@
             "type": "string",
             "example": "success"
           },
+          "code":{
+            "type": "number",
+            "example": 200
+          },
           "project": {
             "$ref": "#/components/schemas/ProjectSchema"
           }
@@ -1435,8 +1578,12 @@
             "type": "string",
             "example": "success"
           },
+          "code":{
+            "type": "number",
+            "example": 200
+          },
           "project": {
-            "$ref": "#/components/schemas/ProjectCreatedResponse"
+            "$ref": "#/components/schemas/ProjectSchema"
           }
         }
       },
@@ -1446,6 +1593,10 @@
           "status": {
             "type": "string",
             "example": "success"
+          },
+          "code":{
+            "type": "number",
+            "example": 200
           },
           "participants": {
             "type": "array",
@@ -1458,6 +1609,11 @@
       "SprintSchema": {
         "type": "object",
         "properties": {
+          "allScheduledTime": {
+            "type": "number",
+            "description": "Whole time spent on the task",
+            "example": "6"
+          },
           "name": {
             "type": "string",
             "description": "Sprint title",
@@ -1485,22 +1641,26 @@
           },
           "totalDaly": {
             "type": "array",
-            "description": "task days",
+            "description": "array of task days",
             "items": {
               "type": "object",
               "description": "Task days and time",
-              "example": [
+              "example": 
                 {
                   "2021-07-02": 0
-                },
-                {
-                  "2021-07-03": 0
-                },
-                {
-                  "2021-07-04": 0
                 }
-              ]
-            }
+            },
+            "example": [
+              {
+                "2021-07-02": 0
+              },
+              {
+                "2021-07-03": 0
+              },
+              {
+                "2021-07-04": 0
+              }
+            ]
           },
           "createdAt": {
             "type": "date",
@@ -1527,24 +1687,57 @@
             "type": "string",
             "example": "success"
           },
-          "sprint": {
-            "$ref": "#/components/schemas/SprintSchema"
+          "code":{
+            "type": "number",
+            "example": 200
+          },
+          "data": {
+            "type": "object",
+            "properties":{
+              "sprint": {
+                "$ref": "#/components/schemas/SprintSchema"
+              }
+            } 
+            
           }
         }
       },
 
       "GetSprintsResponce": {
-        "type": "array",
+        "type": "object",
         "properties": {
           "status": {
             "type": "string",
             "example": "success"
-          }
-        },
-        "description": "Array of user's sprints in one project",
-        "items": {
-          "$ref": "#/components/schemas/SprintSchema"
+          },
+          "code":{
+            "type": "number",
+            "example": 200
+          },
+          "data": {
+            "type": "object",
+            "properties":{
+              "sprints": {
+                "type": "array",
+               "properties": {
+              "status": {
+                "type": "string",
+                "example": "success"
+              },
+              "code":{
+                "type": "number",
+                "example": 200
+              }
+            },
+              "description": "Array of user's sprints in one project",
+              "items": {
+                "$ref": "#/components/schemas/SprintSchema"
+              }
+                }
+            } 
+          } 
         }
+        
       },
 
       "TaskSchema": {
@@ -1565,6 +1758,16 @@
             "description": "Hours planned on the task",
             "example": 8
           },
+          "startDate": {
+            "type": "date",
+            "description": "Date of creation",
+            "example": "2021-07-02"
+          },
+          "durationSprint": {
+            "type": "number",
+            "description": "Sprint duration in days",
+            "example": "4"
+          },
           "sprint": {
             "type": "string",
             "description": "Sprint id",
@@ -1581,7 +1784,12 @@
             "items": {
               "type": "object",
               "description": "Task days and time",
-              "example": [
+              "example": 
+                {
+                  "2021-07-02": 0
+                }
+            },
+            "example":[
                 {
                   "2021-07-02": 0
                 },
@@ -1592,7 +1800,7 @@
                   "2021-07-04": 0
                 }
               ]
-            }
+            
           },
           "createdAt": {
             "type": "date",
@@ -1619,24 +1827,133 @@
             "type": "string",
             "example": "success"
           },
-          "task": {
-            "$ref": "#/components/schemas/TaskSchema"
+          "code":{
+            "type": "number",
+            "example": 201
+          },
+          "data": {
+            "type": "object",
+            "properties":{
+              "task": {
+                "$ref": "#/components/schemas/TaskSchema"
+              }
+            } 
+            
           }
         }
       },
 
-      "GetTasksResponce": {
-        "type": "array",
+      "GetTasksByDayResponce": {
+        "type": "object",
         "properties": {
           "status": {
             "type": "string",
             "example": "success"
+          },
+          "code":{
+            "type": "number",
+            "example": 200
+          },
+          "data": {
+            "type": "object",
+            "properties":{
+              "tasks": {
+                "type": "array",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "success"
+          },
+          "code":{
+            "type": "number",
+            "example": 200
           }
         },
-        "description": "Array of all sprint tasks",
+        "description": "Array of all tasks of one day",
         "items": {
-          "$ref": "#/components/schemas/TaskSchema"
+          "type": "object",
+         "properties": {
+          "name": {
+            "type": "string",
+            "description": "Task title",
+            "example": "Task 1"
+          },
+          "totalTime": {
+            "type": "number",
+            "description": "Hours spent on the task",
+            "example": 8
+          },
+          "scheduledTime": {
+            "type": "number",
+            "description": "Hours planned on the task",
+            "example": 8
+          },
+          "sprint": {
+            "type": "string",
+            "description": "Sprint id",
+            "example": "507f1f99bcf86cd788539018"
+          },
+          "project": {
+            "type": "string",
+            "description": "Project id",
+            "example": "507f1f77bcf86cd799439012"
+          },
+          "byDay": {
+            "type": "object",
+            "description": "Date and hours spent on task",
+            "example": 
+              {
+                "2021-07-04": 0
+              }
+          },
+          "id": {
+            "type": "string",
+            "description": "Project's id",
+            "example": "507f1f77bcf86cd799439012"
+          }
         }
+        }
+                }
+            } 
+          } 
+        }
+      },
+
+      "GetTasksResponce": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "success"
+          },
+          "code":{
+            "type": "number",
+            "example": 200
+          },
+          "data": {
+            "type": "object",
+            "properties":{
+              "tasks": {
+                "type": "array",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "code":{
+                      "type": "number",
+                      "example": 200
+                    }
+                  },
+                  "description": "Array of all sprint tasks",
+                  "items": {
+                    "$ref": "#/components/schemas/TaskSchema"
+                  }
+                }
+            } 
+          } 
+        }
+        
       }
     },
     "securitySchemes": {
