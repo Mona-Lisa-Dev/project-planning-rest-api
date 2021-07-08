@@ -118,6 +118,7 @@ const updateTask = async (req, res, next) => {
 
     if (totalTimetTask + value > planedTime) {
       valueForCart = totalTimetTask * (value / (totalTimetTask + value));
+      //  тут считаю значение с коофициентом, вроде бы ка
       console.log(valueForCart);
     }
 
