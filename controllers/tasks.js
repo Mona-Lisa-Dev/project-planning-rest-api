@@ -114,6 +114,7 @@ const updateTask = async (req, res, next) => {
     const newTotalDaly = oldTotalDaly.map(el =>
       Object.keys(el)[0] === day ? { [day]: tasksTimeSum } : el,
     ); //  перебераю и и дописаваю в totalDaly спринта новое значение tasksTimeSum
+    // то что передать в tasksTimeSum пойдет в поле значение по дню в спринте
 
     //  этот блок скорее всего не понадобится
 
