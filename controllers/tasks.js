@@ -108,6 +108,8 @@ const updateTask = async (req, res, next) => {
       )
       .reduce((acc, el) => acc + el, 0); //     это пипец какой то, ну пусть будет=) считаю все потраченое время на таску что бы записать его в спринт
 
+    //  этот блок скорее всего не понадобится
+
     const projectId = findTask.project;
     const findSprint = await Sprints.getById(projectId, sprintId);
     const oldTotalDaly = findSprint.totalDaly;
@@ -115,8 +117,6 @@ const updateTask = async (req, res, next) => {
       Object.keys(el)[0] === day ? { [day]: tasksTimeSum } : el,
     ); //  перебераю и и дописаваю в totalDaly спринта новое значение tasksTimeSum
     // то что передать в tasksTimeSum пойдет в поле значение по дню в спринте
-
-    //  этот блок скорее всего не понадобится
 
     Sprints.updateSprintTotalDaly(projectId, sprintId, newTotalDaly);
 
