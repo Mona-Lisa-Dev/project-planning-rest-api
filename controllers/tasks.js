@@ -62,6 +62,8 @@ const updateTask = async (req, res, next) => {
   try {
     const findTask = await Tasks.getTaskById(sprintId, taskId);
 
+    const planedTime = findTask.scheduledTime; // получаем запланированое время
+
     if (!findTask) {
       return res.status(HttpCode.NOT_FOUND).json({
         status: 'error',
@@ -74,7 +76,7 @@ const updateTask = async (req, res, next) => {
       Object.keys(el)[0] === day
         ? { [Object.keys(el)[0]]: parseInt(value) }
         : el,
-    );
+    ); // тута я передаю значение таски за день
 
     const totalTime = await findTask.taskByDays.reduce(
       (acc, el) =>
@@ -82,7 +84,7 @@ const updateTask = async (req, res, next) => {
           ? acc + parseInt(value)
           : acc + Object.values(el)[0],
       0,
-    );
+    ); //   высчитываю все время потраченое на таску
 
     const task = await Tasks.updateTask(
       sprintId,
@@ -91,6 +93,7 @@ const updateTask = async (req, res, next) => {
       totalTime,
     );
 
+    //  этот блок скорее всего не понадобится
     const findTasks = await Tasks.allTasks(sprintId);
 
     const tasksTimeSum = findTasks
@@ -103,14 +106,16 @@ const updateTask = async (req, res, next) => {
           }
         }, 0),
       )
-      .reduce((acc, el) => acc + el, 0); //     это пипец какой то, ну пусть будет=)
+      .reduce((acc, el) => acc + el, 0); //     это пипец какой то, ну пусть будет=) считаю все потраченое время на таску что бы записать его в спринт
 
     const projectId = findTask.project;
     const findSprint = await Sprints.getById(projectId, sprintId);
     const oldTotalDaly = findSprint.totalDaly;
     const newTotalDaly = oldTotalDaly.map(el =>
       Object.keys(el)[0] === day ? { [day]: tasksTimeSum } : el,
-    );
+    ); //  перебераю и и дописаваю в totalDaly спринта новое значение tasksTimeSum
+
+    //  этот блок скорее всего не понадобится
 
     Sprints.updateSprintTotalDaly(projectId, sprintId, newTotalDaly);
 
