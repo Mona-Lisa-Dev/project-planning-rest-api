@@ -109,14 +109,27 @@ const updateTask = async (req, res, next) => {
       .reduce((acc, el) => acc + el, 0); //     это пипец какой то, ну пусть будет=) считаю все потраченое время на таску что бы записать его в спринт
 
     //  этот блок скорее всего не понадобится
+    //  Якщо сума витрачених годин на задачу меньша або = запланованим годинам, тоді записуємо на бек те число що ввели в поле "Витрачено за день"
+    // запланировано(totalTimetTask) 5, вводим(value)10  -  считаем 10/15=0,6667=> 5*0,6667=3,33.
+
+    const totalTimetTask = findTask.totalTime;
+
+    let valueForCart = 0;
+
+    if (totalTimetTask + value > planedTime) {
+      valueForCart = totalTimetTask * (value / (totalTimetTask + value));
+      console.log(valueForCart);
+    }
 
     const projectId = findTask.project;
     const findSprint = await Sprints.getById(projectId, sprintId);
     const oldTotalDaly = findSprint.totalDaly;
     const newTotalDaly = oldTotalDaly.map(el =>
-      Object.keys(el)[0] === day ? { [day]: tasksTimeSum } : el,
+      Object.keys(el)[0] === day
+        ? { [day]: Object.values(el)[0] + valueForCart }
+        : el,
     ); //  перебераю и и дописаваю в totalDaly спринта новое значение tasksTimeSum
-    // то что передать в tasksTimeSum пойдет в поле значение по дню в спринте
+    // то что передать в tasksTimeSum пойдет в поле значение по дню в спринте, тоесть в негo нужно дописать значение с коофициентом
 
     Sprints.updateSprintTotalDaly(projectId, sprintId, newTotalDaly);
 
