@@ -10,7 +10,7 @@ const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 const BASE_URL = process.env.BASE_URL;
-const FRONTEND_URL = process.env.FRONTEND_URL;
+// const FRONTEND_URL = process.env.FRONTEND_URL;
 
 const signup = async (req, res, next) => {
   try {
@@ -101,8 +101,20 @@ const googleRedirect = async (req, res, next) => {
     await usersModel.updateToken(existingUser.id, token);
 
     req.header('Authorization', `Bearer ${token}`);
+    const { _id: id, email } = existingUser;
+    return res.status(HttpCode.OK).json({
+      status: 'success',
+      code: HttpCode.OK,
+      data: {
+        token,
+        user: {
+          id,
+          email,
+        },
+      },
+    });
 
-    return res.redirect(`${FRONTEND_URL}/projects`);
+    // return res.redirect(`${FRONTEND_URL}/projects`);
   } catch (error) {
     next(error);
   }
