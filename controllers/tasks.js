@@ -70,7 +70,7 @@ const updateTask = async (req, res, next) => {
       });
     }
 
-    const taskByDaysUpd = findTask.taskByDays.map(el =>
+    const taskByDaysUpd = await findTask.taskByDays.map(el =>
       Object.keys(el)[0] === day
         ? { [Object.keys(el)[0]]: parseInt(value) }
         : el,
@@ -84,35 +84,57 @@ const updateTask = async (req, res, next) => {
       0,
     );
 
+    // TODO:  value+totalTime<=scheduledTime (не превысили лимит)
+
+    const { scheduledTime } = findTask; // запланированное время на таску
+
+    let taskByDaysForDiagramUpd;
+
+    if (totalTime <= scheduledTime) {
+      taskByDaysForDiagramUpd = taskByDaysUpd;
+    } else {
+      taskByDaysForDiagramUpd = await taskByDaysUpd.map(el =>
+        Object.keys(el)[0] !== 'undefined'
+          ? {
+              [Object.keys(el)[0]]:
+                (Object.values(el)[0] / totalTime) * scheduledTime,
+            }
+          : el,
+      );
+    }
     const task = await Tasks.updateTask(
       sprintId,
       taskId,
       taskByDaysUpd,
       totalTime,
+      taskByDaysForDiagramUpd,
     );
 
     const findTasks = await Tasks.allTasks(sprintId);
 
-    const tasksTimeSum = findTasks
-      .map(task =>
-        task.taskByDays.reduce((acc, days) => {
-          if (Object.keys(days)[0] === day) {
-            return acc + Object.values(days)[0];
-          } else {
-            return acc;
-          }
-        }, 0),
-      )
-      .reduce((acc, el) => acc + el, 0); //     это пипец какой то, ну пусть будет=)
-
-    const projectId = findTask.project;
-    const findSprint = await Sprints.getById(projectId, sprintId);
-    const oldTotalDaly = findSprint.totalDaly;
-    const newTotalDaly = oldTotalDaly.map(el =>
-      Object.keys(el)[0] === day ? { [day]: tasksTimeSum } : el,
+    const ArrayTimesForDays = findTasks.reduce(
+      (acc, task) => [...acc, task.taskByDaysForDiagram],
+      [],
     );
 
-    Sprints.updateSprintTotalDaly(projectId, sprintId, newTotalDaly);
+    const newTotalDaly = ArrayTimesForDays.reduce(
+      (acc, el, i) => {
+        return el.map((_, index) =>
+          i
+            ? {
+                [Object.keys(el[index])[0]]:
+                  Object.values(acc[index])[0] +
+                  Object.values(el.find((_, i) => index === i))[0],
+              }
+            : acc[index],
+        );
+      },
+      [...ArrayTimesForDays[0]],
+    );
+
+    const projectId = findTask.project;
+
+    await Sprints.updateSprintTotalDaly(projectId, sprintId, newTotalDaly);
 
     if (task) {
       return res.status(HttpCode.OK).json({
