@@ -62,8 +62,6 @@ const updateTask = async (req, res, next) => {
   try {
     const findTask = await Tasks.getTaskById(sprintId, taskId);
 
-    const planedTime = findTask.scheduledTime; // получаем запланированое время
-
     if (!findTask) {
       return res.status(HttpCode.NOT_FOUND).json({
         status: 'error',
@@ -72,11 +70,11 @@ const updateTask = async (req, res, next) => {
       });
     }
 
-    const taskByDaysUpd = findTask.taskByDays.map(el =>
+    const taskByDaysUpd = await findTask.taskByDays.map(el =>
       Object.keys(el)[0] === day
         ? { [Object.keys(el)[0]]: parseInt(value) }
         : el,
-    ); // тута я передаю значение таски за день
+    );
 
     const totalTime = await findTask.taskByDays.reduce(
       (acc, el) =>
@@ -84,55 +82,59 @@ const updateTask = async (req, res, next) => {
           ? acc + parseInt(value)
           : acc + Object.values(el)[0],
       0,
-    ); //   высчитываю все время потраченое на таску
+    );
 
+    // TODO:  value+totalTime<=scheduledTime (не превысили лимит)
+
+    const { scheduledTime } = findTask; // запланированное время на таску
+
+    let taskByDaysForDiagramUpd;
+
+    if (totalTime <= scheduledTime) {
+      taskByDaysForDiagramUpd = taskByDaysUpd;
+    } else {
+      taskByDaysForDiagramUpd = await taskByDaysUpd.map(el =>
+        Object.keys(el)[0] !== 'undefined'
+          ? {
+              [Object.keys(el)[0]]:
+                (Object.values(el)[0] / totalTime) * scheduledTime,
+            }
+          : el,
+      );
+    }
     const task = await Tasks.updateTask(
       sprintId,
       taskId,
       taskByDaysUpd,
       totalTime,
+      taskByDaysForDiagramUpd,
     );
 
-    //  этот блок скорее всего не понадобится
     const findTasks = await Tasks.allTasks(sprintId);
 
-    const tasksTimeSum = findTasks
-      .map(task =>
-        task.taskByDays.reduce((acc, days) => {
-          if (Object.keys(days)[0] === day) {
-            return acc + Object.values(days)[0];
-          } else {
-            return acc;
-          }
-        }, 0),
-      )
-      .reduce((acc, el) => acc + el, 0); //     это пипец какой то, ну пусть будет=) считаю все потраченое время на таску что бы записать его в спринт
+    const ArrayTimesForDays = findTasks.reduce(
+      (acc, task) => [...acc, task.taskByDaysForDiagram],
+      [],
+    );
 
-    //  этот блок скорее всего не понадобится
-    //  Якщо сума витрачених годин на задачу меньша або = запланованим годинам, тоді записуємо на бек те число що ввели в поле "Витрачено за день"
-    // запланировано(totalTimetTask) 5, вводим(value)10  -  считаем 10/15=0,6667=> 5*0,6667=3,33.
-
-    const totalTimetTask = findTask.totalTime;
-
-    let valueForCart = 0;
-
-    if (totalTimetTask + value > planedTime) {
-      valueForCart = totalTimetTask * (value / (totalTimetTask + value));
-      //  тут считаю значение с коофициентом, вроде бы ка
-      console.log(valueForCart);
-    }
+    const newTotalDaly = ArrayTimesForDays.reduce(
+      (acc, el, i) => {
+        return el.map((_, index) =>
+          i
+            ? {
+                [Object.keys(el[index])[0]]:
+                  Object.values(acc[index])[0] +
+                  Object.values(el.find((_, i) => index === i))[0],
+              }
+            : acc[index],
+        );
+      },
+      [...ArrayTimesForDays[0]],
+    );
 
     const projectId = findTask.project;
-    const findSprint = await Sprints.getById(projectId, sprintId);
-    const oldTotalDaly = findSprint.totalDaly;
-    const newTotalDaly = oldTotalDaly.map(el =>
-      Object.keys(el)[0] === day
-        ? { [day]: Object.values(el)[0] + valueForCart }
-        : el,
-    ); //  перебераю и и дописаваю в totalDaly спринта новое значение tasksTimeSum
-    // то что передать в tasksTimeSum пойдет в поле значение по дню в спринте, тоесть в негo нужно дописать значение с коофициентом
 
-    Sprints.updateSprintTotalDaly(projectId, sprintId, newTotalDaly);
+    await Sprints.updateSprintTotalDaly(projectId, sprintId, newTotalDaly);
 
     if (task) {
       return res.status(HttpCode.OK).json({

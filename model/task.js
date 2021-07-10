@@ -44,7 +44,21 @@ const taskSchema = new Schema(
         });
       },
     },
+    taskByDaysForDiagram: {
+      type: Array,
+      default: function () {
+        const arr = new Array(this.durationSprint).fill();
 
+        const taskDay = (startDate, i) =>
+          dayjs(startDate).add(i, 'day').format('YYYY-MM-DD');
+
+        return arr.map((_, i) => {
+          return {
+            [taskDay(this.startDate, i)]: 0,
+          };
+        });
+      },
+    },
     project: {
       type: SchemaTypes.ObjectId,
       ref: 'project',
@@ -71,6 +85,7 @@ const taskSchema = new Schema(
         delete ret._id;
         delete ret.startDate;
         delete ret.durationSprint;
+        delete ret.taskByDaysForDiagram;
         return ret;
       },
     },
