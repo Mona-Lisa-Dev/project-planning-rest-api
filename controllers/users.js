@@ -10,7 +10,7 @@ const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 const BASE_URL = process.env.BASE_URL;
-const FRONTEND_URL = process.env.FRONTEND_URL;
+// const FRONTEND_URL = process.env.FRONTEND_URL;
 
 const signup = async (req, res, next) => {
   try {
@@ -119,7 +119,8 @@ const googleRedirect = async (req, res, next) => {
     //   },
     // });
 
-    return res.redirect(`${FRONTEND_URL}/projects`);
+    // return res.redirect(`${BASE_URL}/api/users/google-user`);
+    return res.redirect(`http://localhost:3000/google-user`);
   } catch (error) {
     next(error);
   }
