@@ -7,7 +7,7 @@
   },
   "consumes": ["application/json"],
   "produces": ["application/json"],
-  "servers": [{ "url": "https://project-planning-rest-api.herokuapp.com/api" }],
+  "servers": [{ "url": "http://localhost:5000" }],
   "tags": [
     {
       "name": "User",
@@ -769,19 +769,12 @@
       }
     },
 
-    "/api/tasks/{projectId}/{sprintId}/{taskId}/day={day}/value={value}": {
+    "/api/tasks/{sprintId}/{taskId}/day={day}/value={value}": {
       "patch": {
         "tags": ["Tasks"],
         "summary": "Update time spent on task during the day",
         "security": [{ "Bearer": [] }],
         "parameters": [
-          {
-            "in": "path",
-            "name": "projectId",
-            "required": true,
-            "description": "Project id",
-            "type": "string"
-          },
           {
             "in": "path",
             "name": "sprintId",
@@ -1759,16 +1752,6 @@
             "type": "number",
             "description": "Hours planned on the task",
             "example": 8
-          },
-          "startDate": {
-            "type": "date",
-            "description": "Date of creation",
-            "example": "2021-07-02"
-          },
-          "durationSprint": {
-            "type": "number",
-            "description": "Sprint duration in days",
-            "example": "4"
           },
           "sprint": {
             "type": "string",

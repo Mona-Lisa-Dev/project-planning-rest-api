@@ -12,5 +12,6 @@ router.post('/logout', guard, ctrl.logout);
 router.get('/google', ctrl.googleAuth);
 router.get('/google-redirect', ctrl.googleRedirect);
 router.get('/google-user', ctrl.findGoogleUser);
+// router.get('/frontend-redirect', ctrl.frontRedirect);
 
 module.exports = router;

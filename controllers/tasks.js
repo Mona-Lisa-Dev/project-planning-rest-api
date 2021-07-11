@@ -150,7 +150,7 @@ const updateTask = async (req, res, next) => {
       message: 'Task is not found',
     });
   } catch (error) {
-    next(error);
+    next(error); //
   }
 };
 
