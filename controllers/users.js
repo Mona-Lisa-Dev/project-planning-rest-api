@@ -119,7 +119,8 @@ const googleRedirect = async (req, res, next) => {
     //   },
     // });
 
-    return res.redirect(`${BASE_URL}/api/users/google-user`);
+    // return res.redirect(`${BASE_URL}/api/users/google-user`);
+    return res.redirect(`http://localhost:3000/google-user`);
   } catch (error) {
     next(error);
   }
