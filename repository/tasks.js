@@ -11,7 +11,13 @@ const getTaskById = async (sprintId, taskId) => {
   });
 };
 
-const updateTask = async (sprintId, taskId, taskByDays, totalTime) => {
+const updateTask = async (
+  sprintId,
+  taskId,
+  taskByDays,
+  totalTime,
+  taskByDaysForDiagram,
+) => {
   const result = await Task.findOneAndUpdate(
     {
       _id: taskId,
@@ -20,6 +26,7 @@ const updateTask = async (sprintId, taskId, taskByDays, totalTime) => {
     {
       taskByDays,
       totalTime,
+      taskByDaysForDiagram,
     },
     { new: true },
   );
