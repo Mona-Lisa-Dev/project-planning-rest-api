@@ -63,6 +63,8 @@ const googleAuth = async (req, res, next) => {
   }
 };
 
+let existingUser = '';
+
 const googleRedirect = async (req, res, next) => {
   try {
     const fullUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
@@ -92,7 +94,7 @@ const googleRedirect = async (req, res, next) => {
 
     const userEmail = userData.data.email;
     console.log(userEmail);
-    let existingUser = await usersModel.findByEmail(userEmail);
+    existingUser = await usersModel.findByEmail(userEmail);
     if (!existingUser) {
       existingUser = await usersModel.create({ email: userEmail });
     }
@@ -100,24 +102,43 @@ const googleRedirect = async (req, res, next) => {
     const token = jwt.sign({ _id: existingUser.id }, JWT_SECRET_KEY);
     await usersModel.updateToken(existingUser.id, token);
 
-    req.header('Authorization', `Bearer ${token}`);
-    const { _id: id, email } = existingUser;
-    return res.status(HttpCode.OK).json({
-      status: 'success',
-      code: HttpCode.OK,
-      data: {
-        token,
-        user: {
-          id,
-          email,
-        },
-      },
-    });
+    // }
+    // req.header('Authorization', `Bearer ${token}`);
+    // req.send();
 
-    // return res.redirect(`${FRONTEND_URL}/projects`);
+    // const { _id: id, email } = existingUser;
+    // res.status(HttpCode.OK).json({
+    //   status: 'success',
+    //   code: HttpCode.OK,
+    //   data: {
+    //     token,
+    //     user: {
+    //       id,
+    //       email,
+    //     },
+    //   },
+    // });
+
+    return res.redirect(`${BASE_URL}/api/users/google-user`);
   } catch (error) {
     next(error);
   }
+};
+
+const findGoogleUser = async (req, res, next) => {
+  const { _id: id, email, token } = existingUser;
+  existingUser = await usersModel.findByEmail(email);
+  res.status(HttpCode.OK).json({
+    status: 'success',
+    code: HttpCode.OK,
+    data: {
+      token,
+      user: {
+        id,
+        email,
+      },
+    },
+  });
 };
 
 const findUserByEmail = async (req, res, next) => {
@@ -215,5 +236,6 @@ module.exports = {
   login,
   logout,
   findUserByEmail,
+  findGoogleUser,
   getCurrentUser,
 };
