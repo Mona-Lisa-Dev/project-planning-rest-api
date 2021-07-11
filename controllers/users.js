@@ -10,7 +10,7 @@ const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 const BASE_URL = process.env.BASE_URL;
-// const FRONTEND_URL = process.env.FRONTEND_URL;
+const FRONTEND_URL = process.env.FRONTEND_URL;
 
 const signup = async (req, res, next) => {
   try {
@@ -120,14 +120,16 @@ const googleRedirect = async (req, res, next) => {
     // });
 
     // return res.redirect(`${BASE_URL}/api/users/google-user`);
-    return res.redirect(`http://localhost:3000/google-user`);
+    return res.redirect(`${FRONTEND_URL}/google-user`);
   } catch (error) {
     next(error);
   }
 };
 
 const findGoogleUser = async (req, res, next) => {
-  const { _id: id, email, token } = existingUser;
+  const user = await usersModel.findByEmail(existingUser.email);
+
+  const { _id: id, email, token } = user;
   res.status(HttpCode.OK).json({
     status: 'success',
     code: HttpCode.OK,
