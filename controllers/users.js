@@ -101,25 +101,6 @@ const googleRedirect = async (req, res, next) => {
 
     const token = jwt.sign({ _id: existingUser.id }, JWT_SECRET_KEY);
     await usersModel.updateToken(existingUser.id, token);
-
-    // }
-    // req.header('Authorization', `Bearer ${token}`);
-    // req.send();
-
-    // const { _id: id, email } = existingUser;
-    // res.status(HttpCode.OK).json({
-    //   status: 'success',
-    //   code: HttpCode.OK,
-    //   data: {
-    //     token,
-    //     user: {
-    //       id,
-    //       email,
-    //     },
-    //   },
-    // });
-
-    // return res.redirect(`${BASE_URL}/api/users/google-user`);
     return res.redirect(`${FRONTEND_URL}/google-user`);
   } catch (error) {
     next(error);
