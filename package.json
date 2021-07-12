@@ -16,6 +16,7 @@
   "license": "ISC",
   "dependencies": {
     "@sendgrid/mail": "^7.4.4",
+    "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^1.25.2",
     "cors": "2.8.5",
@@ -41,6 +42,7 @@
     "nodemailer": "^6.6.1",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
+    "query-string": "^7.0.1",
     "swagger-ui-express": "^4.1.6",
     "uuid": "^8.3.2"
   },

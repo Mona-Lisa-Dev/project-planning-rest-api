@@ -9,5 +9,8 @@ router.post('/signup', valid.validateSignupUser, ctrl.signup);
 router.post('/login', valid.validateLoginUser, ctrl.login);
 router.get('/current', guard, ctrl.getCurrentUser);
 router.post('/logout', guard, ctrl.logout);
+router.get('/google', ctrl.googleAuth);
+router.get('/google-redirect', ctrl.googleRedirect);
+router.get('/google-user', ctrl.findGoogleUser);
 
 module.exports = router;
